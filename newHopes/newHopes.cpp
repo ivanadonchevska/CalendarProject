@@ -24,11 +24,11 @@ int main()
     Calendar cal;
     //cal.startMenu();
     //cal.addEvent();
-   //cal.listEvents();
     //cal.sortFile();
-   //cal.readFromFileInsertToVector();
-   cal.listEvents();
-    //cout << cal.YYYY_MM_DD("12/03/2023");
+    //cal.readFromFileInsertToVector();
+   //cal.listEvents();
+   cal.deleteEvent();
+   
 
 
 

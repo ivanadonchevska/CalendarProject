@@ -205,6 +205,9 @@ void Calendar::addEvent() {
 }
 
 void Calendar::readFromFileInsertToVector() {
+	if(events.size() != 0)
+		events.clear();
+
 	ifstream Read("newText2.txt");
 	string line;
 	
@@ -248,27 +251,10 @@ void Calendar::readFromFileInsertToVector() {
 	//Delete.close();
 	remove("newText2.txt");
 	rename("TempFile.txt", "newText2.txt");
+	
 
 };
-void Calendar::sortFile() {
-	int i = 0;
-	for (auto itr = mp.begin(); itr != mp.end(); ++itr) {
-		//int i = 0;
-		cout << itr->first << " " << itr->second[i].first << itr->second[i].second << endl;
-		i++;
-	}
 
-
-	/*
-	sort(events.begin(), events.end(), compare);
-
-	for (unsigned long int i = 0; i < events.size(); i++) {
-		cout << events[i].eventName << " " << events[i].startDay << " " << events[i].startMonth << " " << events[i].startYear << " ";
-		cout << events[i].endDay << " " << events[i].endMonth << " " << events[i].endYear << endl;
-
-	}
-	*/
-}
 void Calendar::listEvents() {
 	string line;
 	ifstream Read("newText2.txt");
@@ -292,7 +278,7 @@ void Calendar::deleteEvent() {
 	string line;
 
 	ifstream Delete;
-	Delete.open("newText.txt");
+	Delete.open("newText2.txt");
 	ofstream temp;
 	temp.open("temp.txt");
 	cout << "Enter name: "; //input line to remove
@@ -307,8 +293,9 @@ void Calendar::deleteEvent() {
 
 	temp.close();
 	Delete.close();
-	remove("newText.txt");
-	rename("temp.txt", "newText.txt");
+	remove("newText2.txt");
+	rename("temp.txt", "newText2.txt");
+
 
 	cout << "Event deleted successfully!";
 }
