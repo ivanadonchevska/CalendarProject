@@ -228,10 +228,26 @@ void Calendar::readFromFileInsertToVector() {
 
 	sort(events.begin(), events.end(), compare);
 
-	for (int x = 0; x < events.size(); x++) {
-		cout << events[x].eventName << " " << events[x].startDate << " " << events[x].endDate << endl;
+	//for (int x = 0; x < events.size(); x++) {
+	//	cout << events[x].eventName << " " << events[x].startDate << " " << events[x].endDate << endl;
+	//}
+	ofstream Temp;
+	Temp.open("TempFile.txt");
+
+	for (int i = 0; i < events.size(); i++) {
+		Temp << events[i].eventName << " (" << events[i].startDate;
+		if (events[i].startDate == events[i].endDate) {
+			Temp << ")" << endl;
+		}
+		else {
+			Temp << " - " << events[i].endDate << ")" << endl;
+		}
 	}
-	
+
+	Temp.close();
+	//Delete.close();
+	remove("newText2.txt");
+	rename("TempFile.txt", "newText2.txt");
 
 };
 void Calendar::sortFile() {

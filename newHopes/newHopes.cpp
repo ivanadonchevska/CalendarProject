@@ -26,11 +26,11 @@ int main()
     //cal.addEvent();
    //cal.listEvents();
     //cal.sortFile();
-   cal.readFromFileInsertToVector();
+   //cal.readFromFileInsertToVector();
+   cal.listEvents();
     //cout << cal.YYYY_MM_DD("12/03/2023");
 
-   //comments just to test 
-   //second comment
+
 
     
 }
