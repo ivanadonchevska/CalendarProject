@@ -25,9 +25,9 @@ int main()
     //cal.startMenu();
     //cal.addEvent();
     //cal.sortFile();
-    //cal.readFromFileInsertToVector();
+    cal.readFromFileInsertToVector();
    //cal.listEvents();
-   cal.deleteEvent();
+   //cal.deleteEvent();
    
 
 

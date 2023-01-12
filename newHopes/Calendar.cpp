@@ -48,13 +48,13 @@ void Calendar::startMenu() {
 		//showScedule(); //do it!!
 		break;
 	case 3:
-		listEvents();
+		//listEvents();
 		break;
 	case 4:
 		addEvent();
 		break;
 	case 5:
-		deleteEvent();
+		//deleteEvent();
 		break;
 	case 6:
 		changeStartingDay();
@@ -139,10 +139,11 @@ bool compare(Event& lhs, Event& rhs) {
 		//return true;
 	return false;
 }
+//THIS BIG COMMENT IS PREVIOUS VERSION
 
 void Calendar::addEvent() {
 	ofstream Write;
-	Write.open("newText2.txt", ofstream::app);
+	Write.open("newText3.txt", ofstream::app);
 	//Event event;
 	string desc;
 	string startDate;
@@ -204,6 +205,7 @@ void Calendar::addEvent() {
 	
 }
 
+
 void Calendar::readFromFileInsertToVector() {
 	if(events.size() != 0)
 		events.clear();
@@ -225,18 +227,21 @@ void Calendar::readFromFileInsertToVector() {
 		event.startDate = substrs[1];
 		event.endDate = substrs[2];
 
-		events.push_back(event);
-	}
-	Read.close();
+		//events.push_back(event);
+		mp[event.eventName].push_back(event.startDate);
+		mp[event.eventName].push_back(event.endDate);
 
-	sort(events.begin(), events.end(), compare);
+	}
+	
+
+	//sort(events.begin(), events.end(), compare);
 
 	//for (int x = 0; x < events.size(); x++) {
 	//	cout << events[x].eventName << " " << events[x].startDate << " " << events[x].endDate << endl;
 	//}
 	ofstream Temp;
 	Temp.open("TempFile.txt");
-
+	/*
 	for (int i = 0; i < events.size(); i++) {
 		Temp << events[i].eventName << " (" << events[i].startDate;
 		if (events[i].startDate == events[i].endDate) {
@@ -246,8 +251,18 @@ void Calendar::readFromFileInsertToVector() {
 			Temp << " - " << events[i].endDate << ")" << endl;
 		}
 	}
-
+	*/
+	for (auto element : mp){
+		Temp << element.first << " (" << element.second[0];
+		if (element.second[0] == element.second[1]) {
+			Temp << ")" << endl;
+		}
+		else {
+			Temp << " - " << element.second[1] << ")" << endl;
+		}
+	}
 	Temp.close();
+	Read.close();
 	//Delete.close();
 	remove("newText2.txt");
 	rename("TempFile.txt", "newText2.txt");
@@ -299,6 +314,7 @@ void Calendar::deleteEvent() {
 
 	cout << "Event deleted successfully!";
 }
+*/
 int Calendar::FirstDayOfMonth(int year, int month)
 {
 	int d = 1;

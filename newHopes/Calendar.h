@@ -13,7 +13,7 @@ private:
 	int index;
 	Date currentDate;
 	vector<Event> events;
-	map<string, vector<pair<string, string>>> mp;
+	map<string, vector<string>> mp;
 	string startingDay = "Sun";
 
 	//is it possible to make it glogal somehow and change it
