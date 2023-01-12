@@ -10,14 +10,16 @@ using namespace std;
 
 class Calendar {
 private:
-	int index;
 	Date currentDate;
 	vector<Event> events;
-	map<string, vector<string>> mp;
 	string startingDay = "Sun";
 
 	//is it possible to make it glogal somehow and change it
 public:
+	
+	void addEvent(); //to add event to file
+
+	
 	Calendar();
 	
 	string getStartingDay();
@@ -40,13 +42,13 @@ public:
 
 	//void showScedule(); //?
 	void listEvents(); //list all events in file
-	void addEvent(); //to add event to file
+	
 	void deleteEvent(); //delete event from file
 
 	void changeStartingDay();
 
 	//void specialRead();
-	void sortFile();
+	void readMap();
 	void readFromFileInsertToVector();
 
 	//bool compare(Event&, Event&);

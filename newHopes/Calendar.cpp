@@ -48,13 +48,13 @@ void Calendar::startMenu() {
 		//showScedule(); //do it!!
 		break;
 	case 3:
-		//listEvents();
+		listEvents();
 		break;
 	case 4:
 		addEvent();
 		break;
 	case 5:
-		//deleteEvent();
+		deleteEvent();
 		break;
 	case 6:
 		changeStartingDay();
@@ -66,52 +66,20 @@ void Calendar::startMenu() {
 }
 
 bool Calendar::doesEventExist(string eventToFind) {
-	int offset;
 	string line;
 	ifstream Read;
-	Read.open("randomText.txt");
+	Read.open("newText3.txt");
 
-	if (Read.is_open())
-	{
-		while (!Read.eof())
-		{
-			getline(Read, line);
-			if ((offset = line.find(eventToFind, 0)) != string::npos)
-			{
-				cout << "This event name already exist! Try another one." << endl;
-				//std::cout << "found '" << eventToFind << "' in '" << line << "'" << endl;
-				Read.close();
-				return true;
-			}
-			else
-				return false;
-			//std::cout << "Not found" << endl;
+	while (getline(Read, line)) {
+		if (line.find(eventToFind) != string::npos) {
+			cout << "This event name already exist! Try another one." << endl;
+			return true;
 		}
-		Read.close();
 	}
-	else
-		std::cout << "Unable to open this file." << endl;
-
-	return false; //check it
+	Read.close();
+	return false;
+	
 }
-/*
-//doesn't work as expected ^_-
-bool Calendar::isDateCorrect(Date date) {
-	if (date.day > 0 && date.day <= 31 && date.month > 0 && date.month <= 12)
-		return true;
-	return true;
-}
-//the same as previous one method for validation
-bool Calendar::isEndDateValid(Date start, Date end) {
-	if (start.year > end.year)
-		return false;
-	else if (start.year == end.year && start.month > end.month)
-		return false;
-	else if (start.year == end.year && start.month == end.month && start.day > end.day)
-		return false;
-	return true;
-}
-*/
 
 //function to convert DD/MM/YYYY to YYYY/MM/DD to be easy to compare
 string YYYY_MM_DD(string dateTime) {
@@ -128,6 +96,7 @@ string YYYY_MM_DD(string dateTime) {
 
 	return s1;
 }
+
 bool compare(Event& lhs, Event& rhs) {
 	if (YYYY_MM_DD(lhs.startDate) < YYYY_MM_DD(rhs.startDate))
 		return true;
@@ -139,87 +108,45 @@ bool compare(Event& lhs, Event& rhs) {
 		//return true;
 	return false;
 }
-//THIS BIG COMMENT IS PREVIOUS VERSION
 
 void Calendar::addEvent() {
 	ofstream Write;
 	Write.open("newText3.txt", ofstream::app);
-	//Event event;
-	string desc;
-	string startDate;
-	string endDate;
-	
-	//char ch;
+	Event event;
 
 	cout << "Enter name: ";
 	do {
-		getline(cin, desc);
-	} while (doesEventExist(desc));
-	Write << desc << "-";
+		getline(cin, event.eventName);
+	} while (doesEventExist(event.eventName));
 
-	//event.setDescription(desc);
+	Write << event.eventName << " ";
 
+	
 	cout << "Enter start date (DD/MM/YYYY): ";
-	do {
-		getline(cin, startDate);
-	} while (doesEventExist(startDate));
-	Write << startDate << "-";
-	//cin >> event.startDay>> ch >> event.startMonth >> ch >> event.startYear;
+	cin >> event.startDate;
+	Write << event.startDate << " ";
 	cout << "Enter end date (DD/MM/YYYY): ";
-	//cin >> event.endDay >> ch >> event.endMonth >> ch >> event.endYear;
-	do {
-		getline(cin, endDate);
-	} while (doesEventExist(endDate));
-	Write << endDate << "\n";
-
-	//events.push_back(event);
-	//mp[desc].push_back(make_pair(startDate, endDate));
-
-	
-	//Write << " (";
-	//if (event.startDay / 10 == 0)
-		//Write << "0";
-	//Write << event.startDay << "/";
-	//if (event.startMonth / 10 == 0)
-		//Write << "0";
-	//Write << event.startMonth << "/" << event.startYear;
-
-	
-	/*
-	if (event.endDay == event.startDay && event.endMonth == event.startMonth && event.startYear == event.endYear)
-		Write << ")" << "\n";
-	else {
-		Write << " - ";
-		if (event.endDay / 10 == 0)
-			Write << "0";
-		Write << event.endDay << "/";
-		if (event.endMonth / 10 == 0)
-			Write << "0";
-		Write << event.endMonth << "/" << event.endYear << ")" << "\n";
+	cin >> event.endDate;
+	while (event.endDate < event.startDate) {
+		cout << "End date can not be before start date. Try again! \n";
+		cin >> event.endDate;
 	}
-	*/
-	//event.setEndDate(end);
-	Write.close();
-
-	cout << "Event added successfully!";
+	Write << event.endDate << "\n";
 	
+	Write.close();
+	cout << "Event added successfully!";
 }
 
-
-void Calendar::readFromFileInsertToVector() {
-	if(events.size() != 0)
-		events.clear();
-
-	ifstream Read("newText2.txt");
+void Calendar::listEvents() {
+	ifstream Read("newText3.txt");
 	string line;
 	
 	while (getline(Read, line)) {
-
 		istringstream iss(line);
 		string substr;
 		vector<string> substrs;
 
-		while (getline(iss, substr, '-')) {
+		while (getline(iss, substr, ' ')) {
 			substrs.push_back(substr);
 		}
 		Event event;
@@ -227,52 +154,47 @@ void Calendar::readFromFileInsertToVector() {
 		event.startDate = substrs[1];
 		event.endDate = substrs[2];
 
-		//events.push_back(event);
-		mp[event.eventName].push_back(event.startDate);
-		mp[event.eventName].push_back(event.endDate);
-
+		events.push_back(event);
 	}
-	
+	Read.close();
 
-	//sort(events.begin(), events.end(), compare);
+	sort(events.begin(), events.end(), compare);
 
-	//for (int x = 0; x < events.size(); x++) {
-	//	cout << events[x].eventName << " " << events[x].startDate << " " << events[x].endDate << endl;
-	//}
+	cout << "You have the following events: \n";
+	for (int i = 0; i < events.size(); i++) {
+		cout << i + 1 << ". " << events[i].eventName << " (" << events[i].startDate;
+		if (events[i].startDate == events[i].endDate) {
+			cout << ")" << "\n";
+		}
+		else {
+			cout << " - " << events[i].endDate << ") \n";
+		}
+	}
+	/*
 	ofstream Temp;
 	Temp.open("TempFile.txt");
-	/*
+	
 	for (int i = 0; i < events.size(); i++) {
 		Temp << events[i].eventName << " (" << events[i].startDate;
 		if (events[i].startDate == events[i].endDate) {
-			Temp << ")" << endl;
+			Temp << ")" << "/n";
 		}
 		else {
-			Temp << " - " << events[i].endDate << ")" << endl;
+			Temp << " - " << events[i].endDate << ") /n";
 		}
 	}
-	*/
-	for (auto element : mp){
-		Temp << element.first << " (" << element.second[0];
-		if (element.second[0] == element.second[1]) {
-			Temp << ")" << endl;
-		}
-		else {
-			Temp << " - " << element.second[1] << ")" << endl;
-		}
-	}
+
 	Temp.close();
-	Read.close();
-	//Delete.close();
-	remove("newText2.txt");
-	rename("TempFile.txt", "newText2.txt");
 	
-
+	remove("newText.txt");
+	rename("TempFile.txt", "newText2.txt");
+	*/
 };
-
+/*
+//if found solution to do it better use this function for print events
 void Calendar::listEvents() {
 	string line;
-	ifstream Read("newText2.txt");
+	ifstream Read("newText3.txt");
 
 	cout << "You have the following events:" << endl;
 	if (Read.is_open()) {
@@ -287,13 +209,13 @@ void Calendar::listEvents() {
 	else
 		cout << "Unable to open file";
 }
-
+*/
 void Calendar::deleteEvent() {
 	string deleteEvent;
 	string line;
 
 	ifstream Delete;
-	Delete.open("newText2.txt");
+	Delete.open("newText3.txt");
 	ofstream temp;
 	temp.open("temp.txt");
 	cout << "Enter name: "; //input line to remove
@@ -308,13 +230,12 @@ void Calendar::deleteEvent() {
 
 	temp.close();
 	Delete.close();
-	remove("newText2.txt");
-	rename("temp.txt", "newText2.txt");
-
+	remove("newText3.txt");
+	rename("temp.txt", "newText3.txt");
 
 	cout << "Event deleted successfully!";
 }
-*/
+
 int Calendar::FirstDayOfMonth(int year, int month)
 {
 	int d = 1;
