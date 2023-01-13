@@ -6,9 +6,8 @@
 
 using namespace std;
 
+int main(){
 
-int main()
-{
     Calendar cal;
    // cal.startMenu();
    

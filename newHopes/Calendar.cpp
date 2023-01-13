@@ -69,7 +69,7 @@ void Calendar::startMenu() {
 bool Calendar::doesEventExist(string eventToFind) {
 	string line;
 	ifstream Read;
-	Read.open("newText4.txt");
+	Read.open("newText5.txt");
 
 	while (getline(Read, line)) {
 		if (line.find(eventToFind) != string::npos) {
@@ -112,19 +112,19 @@ bool compare(Event& lhs, Event& rhs) {
 
 void Calendar::addEvent() {
 	ofstream Write;
-	Write.open("newText4.txt", ofstream::app);
+	Write.open("newText5.txt", ofstream::app);
 	Event event;
 
 	cout << "Enter name: ";
 	do {
 		getline(cin, event.eventName);
 	} while (doesEventExist(event.eventName));
-	Write << event.eventName << " ";
+	Write << event.eventName << "-";
 
 	
 	cout << "Enter start date (DD/MM/YYYY): ";
 	cin >> event.startDate;
-	Write << event.startDate << " ";
+	Write << event.startDate << "-";
 	cout << "Enter end date (DD/MM/YYYY): ";
 	cin >> event.endDate;
 	while (event.endDate < event.startDate) {
@@ -139,7 +139,7 @@ void Calendar::addEvent() {
 
 //make comment if there is no events!!!
 void Calendar::showScedule() {
-	ifstream Read("newText4.txt");
+	ifstream Read("newText5.txt");
 	string line;
 	
 	while (getline(Read, line)) {
@@ -147,7 +147,7 @@ void Calendar::showScedule() {
 		string substr;
 		vector<string> substrs;
 
-		while (getline(iss, substr, ' ')) {
+		while (getline(iss, substr, '-')) {
 			substrs.push_back(substr);
 		}
 		Event event;
@@ -216,23 +216,24 @@ void Calendar::deleteEvent() {
 	string line;
 
 	ifstream Delete;
-	Delete.open("newText4.txt");
+	Delete.open("newText5.txt");
 	ofstream temp;
 	temp.open("temp.txt");
 	cout << "Enter name: "; //input line to remove
-	cin >> deleteEvent;
+	getline(cin, deleteEvent);
+	//cin >> deleteEvent;
 
-	while (getline(Delete, line))
-	{
-		string id(line.begin(), line.begin() + line.find(" "));
+	while (getline(Delete, line)){
+		string id(line.begin(), line.begin() + line.find("-"));
 		if (id != deleteEvent)
+		//line.replace(line.find(deleteEvent), deleteEvent.length(), "");
 			temp << line << endl;
 	}
 
 	temp.close();
 	Delete.close();
-	remove("newText4.txt");
-	rename("temp.txt", "newText4.txt");
+	remove("newText5.txt");
+	rename("temp.txt", "newText5.txt");
 
 	cout << "Event deleted successfully!";
 }
@@ -375,6 +376,7 @@ vector<int> Calendar::fromStringToVector(string date) {
 
 void Calendar::listEvents() {
 	string monthAndYear;
+	cout << "\n";
 	cout << "Enter month (MM/YYYY): ";
 	cin >> monthAndYear;
 
@@ -386,7 +388,7 @@ void Calendar::listEvents() {
 	cout << Date::monthNames[IntMonth - 1] << " " << year << "\n";
 	cout << "------------\n"; //if possible make it long as string month + year
 
-	ifstream Read("newText4.txt");
+	ifstream Read("newText5.txt");
 	string line;
 
 	if (events.size() != 0)
@@ -397,7 +399,7 @@ void Calendar::listEvents() {
 		string substr;
 		vector<string> substrs;
 		
-		while (getline(iss, substr, ' ')) {
+		while (getline(iss, substr, '-')) {
 			substrs.push_back(substr);
 		}
 		Event event;
