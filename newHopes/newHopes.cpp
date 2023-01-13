@@ -10,19 +10,18 @@ using namespace std;
 int main()
 {
     Calendar cal;
-    cal.startMenu();
+   // cal.startMenu();
    
     //cal.sortFile();
    //cal.readFromFileInsertToVector();
-   //cal.listEvents();
+   
   //cal.deleteEvent();
  
     //cal.addEvent();
     //cal.readMap();
+    //cal.showScedule();
+    //cal.listEvents();  
    
-
-
-
-    
 }
+
 

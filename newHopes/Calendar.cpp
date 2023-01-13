@@ -46,7 +46,7 @@ void Calendar::startMenu() {
 		showCalendar(); //staft from Sunday by default
 		break;
 	case 2:
-		//showScedule(); //do it!!
+		showScedule(); //do it!!
 		break;
 	case 3:
 		Calendar::listEvents();
@@ -138,7 +138,7 @@ void Calendar::addEvent() {
 }
 
 //make comment if there is no events!!!
-void Calendar::listEvents() {
+void Calendar::showScedule() {
 	ifstream Read("newText4.txt");
 	string line;
 	
@@ -353,3 +353,63 @@ void Calendar::changeStartingDay() {
 	cout << "Saved!";
 }
 
+void Calendar::listEvents() {
+	string monthAndYear;
+	cout << "Enter month (MM/YYYY): ";
+	cin >> monthAndYear;
+
+
+	string month = monthAndYear.substr(0, 2); 
+	int IntMonth = stoi(month); //stoi is used to convert string to integer
+	string year = monthAndYear.substr(3, 6);
+	//cout << month << " " << year << endl;
+	cout << "\n";
+	cout << Date::monthNames[IntMonth - 1] << " " << year << "\n";
+	cout << "------------\n"; //if possible make it long as string month + year
+
+	ifstream Read("newText4.txt");
+	string line;
+
+	cout << "Vec size: " << events.size() << endl;
+	if (events.size() != 0)
+		events.clear();
+
+	while (getline(Read, line)) {
+		istringstream iss(line);
+		string substr;
+		vector<string> substrs;
+		
+		while (getline(iss, substr, ' ')) {
+			substrs.push_back(substr);
+		}
+		Event event;
+		event.eventName = substrs[0];
+		event.startDate = substrs[1];
+		event.endDate = substrs[2];
+
+		string startMonth = event.startDate;
+		startMonth.erase(0, 3);
+		startMonth.erase(2, 6);
+
+		if (startMonth == month) //push_back in vector only events that start on inserted month
+			events.push_back(event);
+		else
+			continue;
+	
+	}
+	Read.close();
+
+	sort(events.begin(), events.end(), compare);
+
+	string startDay;
+	int intDay;
+	
+
+	for (int i = 0; i < events.size(); i++) {
+		startDay = events[i].startDate;
+		startDay.erase(2, 8);
+		intDay = stoi(startDay);
+		cout << Date::shortWeekDays[intDay - 1] << ", " << startDay << "\t" << events[i].eventName << endl;
+	}
+
+}

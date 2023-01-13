@@ -32,7 +32,7 @@ public:
 	void setFirstDay();
 	void showCalendar();
 
-	//void showScedule(); //?
+	void showScedule(); //?
 	void listEvents(); //list all events in file
 	void deleteEvent(); //delete event from file
 	void changeStartingDay(); //fix it to work okey

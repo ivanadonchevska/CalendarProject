@@ -29,7 +29,7 @@ public:
 	static const string dayNames[8];
 	static const string monthNames[12];
 	static const string weekDays[7];
-
+	static const string shortWeekDays[7];
 
 
 	//string toString() const;

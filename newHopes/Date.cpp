@@ -80,3 +80,13 @@ const string Date::weekDays[7] = {
     "Saturday",
     "Sunday"
 };
+
+const string Date::shortWeekDays[7] = {
+    "Mo",
+    "Tu",
+    "We",
+    "Th",
+    "Fr",
+    "Sa",
+    "Su"
+};
