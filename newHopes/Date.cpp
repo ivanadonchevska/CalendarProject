@@ -82,11 +82,11 @@ const string Date::weekDays[7] = {
 };
 
 const string Date::shortWeekDays[7] = {
+    "Su",
     "Mo",
     "Tu",
     "We",
     "Th",
     "Fr",
-    "Sa",
-    "Su"
+    "Sa"
 };

@@ -12,15 +12,11 @@ int main()
     Calendar cal;
    // cal.startMenu();
    
-    //cal.sortFile();
-   //cal.readFromFileInsertToVector();
-   
-  //cal.deleteEvent();
+    //cal.deleteEvent();
  
     //cal.addEvent();
-    //cal.readMap();
-    //cal.showScedule();
-    //cal.listEvents();  
+    cal.showScedule();
+    cal.listEvents();  
    
 }
 

@@ -237,12 +237,12 @@ void Calendar::deleteEvent() {
 	cout << "Event deleted successfully!";
 }
 
-int Calendar::FirstDayOfMonth(int year, int month)
+int Calendar::FirstDayOfMonth(int day, int month, int year)
 {
-	int d = 1;
+	//int d = 1;
 	static int t[] = { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 };
 	year -= month < 3;
-	return (year + year / 4 - year / 100 + year / 400 + t[month - 1] + d) % 7;
+	return (year + year / 4 - year / 100 + year / 400 + t[month - 1] + day) % 7;
 }
 
 int Calendar::getNumberOfDays(int month, int year) {
@@ -292,12 +292,12 @@ void Calendar::showCalendar() {
 	cout << endl;
 
 	//  Tomohiko Sakamoto's Algorithm
-
+	int day = 1;
 	int startDay = 0;
 	if (startingDay == "Sun")
-		startDay = FirstDayOfMonth(year, month);
+		startDay = FirstDayOfMonth(day, month, year);
 	else if (startingDay == "Mon") {
-		startDay = FirstDayOfMonth(year, month);
+		startDay = FirstDayOfMonth(day, month, year);
 		if (startDay == 0) {
 			startDay += 6;
 		}
@@ -353,16 +353,35 @@ void Calendar::changeStartingDay() {
 	cout << "Saved!";
 }
 
+vector<int> Calendar::fromStringToVector(string date) {
+	vector<int> dateValues;
+	string day = date;
+	day.erase(2, 8);
+	int IntDay = stoi(day);
+	string month = date;
+	month.erase(0, 3);
+	month.erase(2, 6);
+	int IntMonth = stoi(month);
+	string year = date;
+	year.erase(0, 6);
+	int IntYear = stoi(year);
+
+	dateValues.push_back(IntDay);
+	dateValues.push_back(IntMonth);
+	dateValues.push_back(IntYear);
+	
+	return dateValues;
+}
+
 void Calendar::listEvents() {
 	string monthAndYear;
 	cout << "Enter month (MM/YYYY): ";
 	cin >> monthAndYear;
 
-
 	string month = monthAndYear.substr(0, 2); 
 	int IntMonth = stoi(month); //stoi is used to convert string to integer
 	string year = monthAndYear.substr(3, 6);
-	//cout << month << " " << year << endl;
+	int IntYear = stoi(year);
 	cout << "\n";
 	cout << Date::monthNames[IntMonth - 1] << " " << year << "\n";
 	cout << "------------\n"; //if possible make it long as string month + year
@@ -370,7 +389,6 @@ void Calendar::listEvents() {
 	ifstream Read("newText4.txt");
 	string line;
 
-	cout << "Vec size: " << events.size() << endl;
 	if (events.size() != 0)
 		events.clear();
 
@@ -387,29 +405,43 @@ void Calendar::listEvents() {
 		event.startDate = substrs[1];
 		event.endDate = substrs[2];
 
-		string startMonth = event.startDate;
-		startMonth.erase(0, 3);
-		startMonth.erase(2, 6);
+		vector<int> IntStartDate;
+		IntStartDate = fromStringToVector(event.startDate);
+		vector<int> IntEndDate;
+		IntEndDate = fromStringToVector(event.endDate);
 
-		if (startMonth == month) //push_back in vector only events that start on inserted month
-			events.push_back(event);
+		if (IntStartDate[1] == IntMonth) { //push_back in vector only events that start on inserted month
+			if (event.startDate == event.endDate) {
+				mp[IntStartDate[0]].insert(event.eventName);
+			}
+			else {
+				int startFrom = IntStartDate[0];
+				int counter = 1;
+				int numOfEvents = 0; //this variable is to store difference between first and last day of given event, so we can count how many events are
+				numOfEvents = IntEndDate[0] - IntStartDate[0] + 1;
+				while (startFrom <= IntEndDate[0] && startFrom <= getNumberOfDays(IntStartDate[1], IntStartDate[2])) {
+					string fullEventName = event.eventName + " (Day " + to_string(counter) + "/" + to_string(numOfEvents) + ")";
+					mp[startFrom].insert(fullEventName);
+					startFrom++;
+					counter++;
+				}
+			}
+		}
 		else
 			continue;
 	
 	}
 	Read.close();
-
-	sort(events.begin(), events.end(), compare);
-
-	string startDay;
-	int intDay;
 	
+	for (auto& x : mp) {	
+		int startWeekDay = FirstDayOfMonth(x.first, IntMonth, IntYear);
+		cout << Date::shortWeekDays[startWeekDay] << ", " << x.first << "\t";
+		for (auto& y : x.second) {
+			cout << y << "\n";
+			//cout << "\t"; //fix print on new line when the same date!!!!
 
-	for (int i = 0; i < events.size(); i++) {
-		startDay = events[i].startDate;
-		startDay.erase(2, 8);
-		intDay = stoi(startDay);
-		cout << Date::shortWeekDays[intDay - 1] << ", " << startDay << "\t" << events[i].eventName << endl;
+		}
+
 	}
-
+	
 }

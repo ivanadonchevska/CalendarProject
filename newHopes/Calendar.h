@@ -4,6 +4,7 @@
 #include <sstream>
 #include <map>
 #include <unordered_map>
+#include <set>
 #include "Event.h"
 #include "Date.h"
 using namespace std;
@@ -13,6 +14,7 @@ private:
 	Date currentDate;
 	vector<Event> events;
 	string startingDay = "Sun";
+	map <int, set<string>> mp;
 	//is it possible to make it glogal somehow and change it
 public:
 	
@@ -27,7 +29,9 @@ public:
 	bool doesEventExist(string);
 	void addEvent(); //to add event to file
 
-	int FirstDayOfMonth(int, int);
+	vector<int> fromStringToVector(string);
+
+	int FirstDayOfMonth(int, int, int);
 	int getNumberOfDays(int, int);
 	void setFirstDay();
 	void showCalendar();
