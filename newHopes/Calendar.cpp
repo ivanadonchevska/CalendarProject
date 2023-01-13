@@ -477,12 +477,16 @@ void Calendar::listEvents() {
 	
 	for (auto& x : mp) {	
 		int startWeekDay = DayOfMonth(x.first, IntMonth, IntYear);
+		int counter = 0; 
 		cout << Date::shortWeekDays[startWeekDay] << ", " << x.first << "\t";
 		for (auto& y : x.second) {
 			cout << y << "\n";
-			//cout << "\t"; //fix print on new line when the same date!!!!
-
+			if (x.second.size() > 1 && counter < x.second.size() - 1) { 
+				cout << "        ";
+				counter++;
+			}
 		}
+		
 
 	}
 	
