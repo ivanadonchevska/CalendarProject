@@ -362,20 +362,37 @@ void Calendar::showCalendar() {
 	//Print the date corresponding with the day 
 	for (int d = 0; d < dayCount; ++d) {
 		if (d < 9) {
-			if (storeEvents.find(d + 1) != storeEvents.end()) {
+			//current day plus has events
+			if (storeEvents.find(d + 1) != storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year) {
+				for (auto& x : storeEvents) {
+					if (x.first == d + 1)
+						cout << "[0" << d + 1 << "](" << x.second << ")";
+				}
+			}
+			//has events and not current day
+			else if (storeEvents.find(d + 1) != storeEvents.end() ) {
 				for (auto& x : storeEvents) {
 					if (x.first == d + 1)
 						cout << "0" << d + 1 << "(" << x.second << ")";
 				}
 			}
-			//else if for case when current day plus events
+			//current day but without events
+			else if(storeEvents.find(d + 1) == storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year)
+				cout << "[0" << d + 1 << "] ";
 			else
+				//no events not current day
 				cout << "0" << d + 1 << "  ";
 			//if(currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year && storeEvents.find(d) != storeEvents.end())
 				//cout << "[0" << d + 1 << "] ";
 		}
 		else {
-			if (storeEvents.find(d + 1) != storeEvents.end()) {
+			if (storeEvents.find(d + 1) != storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year) {
+				for (auto& x : storeEvents) {
+					if (x.first == d + 1)
+						cout << "[" << d + 1 << "](" << x.second << ")";
+				}
+			}
+			else if (storeEvents.find(d + 1) != storeEvents.end()) {
 				for (auto& x : storeEvents) {
 					if (x.first == d + 1)
 						cout << d + 1 << "(" << x.second << ")";
@@ -383,6 +400,8 @@ void Calendar::showCalendar() {
 						//cout <<"[" << d + 1 << "] ";
 				}
 			}
+			else if(storeEvents.find(d + 1) == storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year)
+				cout <<"[" << d + 1 << "] ";
 			else
 				cout << d + 1 << "  ";
 	

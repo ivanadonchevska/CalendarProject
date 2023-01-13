@@ -13,7 +13,7 @@ int main(){
    
     //cal.deleteEvent();
  
-   // cal.addEvent();
+   //cal.addEvent();
     cal.showScedule();
     //cal.listEvents();
     cal.showCalendar();
