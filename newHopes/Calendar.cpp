@@ -166,46 +166,8 @@ void Calendar::showScedule() {
 			cout << " - " << events[i].endDate << ") \n";
 		}
 	}
-	/*
-	ofstream Temp;
-	Temp.open("TempFile.txt");
-	
-	for (int i = 0; i < events.size(); i++) {
-		Temp << events[i].eventName << " (" << events[i].startDate;
-		if (events[i].startDate == events[i].endDate) {
-			Temp << ")" << "/n";
-		}
-		else {
-			Temp << " - " << events[i].endDate << ") /n";
-		}
-	}
-
-	Temp.close();
-	
-	remove("newText.txt");
-	rename("TempFile.txt", "newText2.txt");
-	*/
 };
-/*
-//if found solution to do it better use this function for print events
-void Calendar::listEvents() {
-	string line;
-	ifstream Read("newText3.txt");
 
-	cout << "You have the following events:" << endl;
-	if (Read.is_open()) {
-		int i = 1;
-		while (getline(Read, line)) {
-			cout << i << ". " << line << "\n";
-			i++;
-		}
-		Read.close();
-	}
-
-	else
-		cout << "Unable to open file";
-}
-*/
 void Calendar::deleteEvent() {
 	string deleteEvent;
 	string line;
@@ -262,17 +224,17 @@ void Calendar::setFirstDay(int month, int year) {
 	if (startingDay == "Sun") {
 		for (int i = 0; i < DAYS_NUMBER; i++) {
 			if (i == currentDay && currentDate.getMonth() == month && currentDate.getYear() == year)
-				cout << "[" << Date::dayNames[i] << "]" << " ";
+				cout << "[" << Date::dayNames[i] << "]" << "   ";
 			else 
-				cout << Date::dayNames[i] << " ";
+				cout << Date::dayNames[i] << "   ";
 		}
 	}
 	else if (startingDay == "Mon") {
 		for (int i = 1; i < DAYS_NUMBER + 1; i++) {
-			if (i == currentDay + 1 && currentDate.getMonth() == month && currentDate.getYear() == year)
-				cout << "[" << Date::dayNames[i] << "]" << " ";
+			if (i == currentDay  && currentDate.getMonth() == month && currentDate.getYear() == year)
+				cout << "[" << Date::dayNames[i] << "]" << "   ";
 			else 
-				cout << Date::dayNames[i] << " ";
+				cout << Date::dayNames[i] << "   ";
 		}
 	}
 }
@@ -282,8 +244,8 @@ void Calendar::showCalendar() {
 	int year; // = currentDate.getYear();
 	int month; //= currentDate.getMonth();
 	char ch;
-	cout << currentDate.getDay() << endl;
-	cout << currentDate.getMonth() << endl;
+	//cout << currentDate.getDay() << endl;
+	//cout << currentDate.getMonth() << endl;
 	cout << "Enter month (MM/YYYY): ";
 
 	cin >> month >> ch >> year;
@@ -336,8 +298,6 @@ void Calendar::showCalendar() {
 	}
 	Read.close();
 
-
-
 	//  Tomohiko Sakamoto's Algorithm
 	int day = 1;
 	int startDay = 0;
@@ -356,7 +316,7 @@ void Calendar::showCalendar() {
 
 	//Print and empty space if the day doesn't have a corresponding day 
 	for (int x = 0; x < startDay; ++x) {
-		std::cout << "    ";
+		std::cout << "      ";
 	}
 
 	//Print the date corresponding with the day 
@@ -366,44 +326,39 @@ void Calendar::showCalendar() {
 			if (storeEvents.find(d + 1) != storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year) {
 				for (auto& x : storeEvents) {
 					if (x.first == d + 1)
-						cout << "[0" << d + 1 << "](" << x.second << ")";
+						cout << " [0" << d + 1 << "](" << x.second << ")";
 				}
 			}
 			//has events and not current day
 			else if (storeEvents.find(d + 1) != storeEvents.end() ) {
 				for (auto& x : storeEvents) {
 					if (x.first == d + 1)
-						cout << "0" << d + 1 << "(" << x.second << ")";
+						cout << " 0" << d + 1 << "(" << x.second << ") ";
 				}
 			}
 			//current day but without events
 			else if(storeEvents.find(d + 1) == storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year)
-				cout << "[0" << d + 1 << "] ";
+				cout << " [0" << d + 1 << "]  ";
 			else
-				//no events not current day
-				cout << "0" << d + 1 << "  ";
-			//if(currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year && storeEvents.find(d) != storeEvents.end())
-				//cout << "[0" << d + 1 << "] ";
+				cout << " 0" << d + 1 << "   ";
 		}
 		else {
 			if (storeEvents.find(d + 1) != storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year) {
 				for (auto& x : storeEvents) {
 					if (x.first == d + 1)
-						cout << "[" << d + 1 << "](" << x.second << ")";
+						cout << " [" << d + 1 << "](" << x.second << ")";
 				}
 			}
 			else if (storeEvents.find(d + 1) != storeEvents.end()) {
 				for (auto& x : storeEvents) {
 					if (x.first == d + 1)
-						cout << d + 1 << "(" << x.second << ")";
-					//if (currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year)
-						//cout <<"[" << d + 1 << "] ";
+						cout << d + 1 << "(" << x.second << ") ";
 				}
 			}
 			else if(storeEvents.find(d + 1) == storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year)
-				cout <<"[" << d + 1 << "] ";
+				cout <<" [" << d + 1 << "]  ";
 			else
-				cout << d + 1 << "  ";
+				cout << " " << d + 1 << "   ";
 	
 		}
 		startDay++;
@@ -415,9 +370,9 @@ void Calendar::showCalendar() {
 
 	cout << endl;
 
-	for (auto& x : storeEvents) {
-		cout << x.first << " " << x.second << endl;
-	}
+	//for (auto& x : storeEvents) {
+	//	cout << x.first << " " << x.second << endl;
+	//}
 }
 
 //if called this function should change starting day when call print calendar??
@@ -429,15 +384,12 @@ void Calendar::changeStartingDay() {
 		wholeDayName = "Sunday";
 	else if (getStartingDay() == "Mon")
 		wholeDayName = "Monday";
-	else
-		cout << "Invalid input" << endl;
 
 	cout << "The first day of the week is currently " << wholeDayName << "." << endl;
 	cout << endl;
 	cout << "Enter new(Mon / Sun): ";
 	cin >> changeDay;
 	setStartingDay(changeDay);
-	//startingDay = changeDay;
 	cout << endl;
 	cout << "Saved!";
 }

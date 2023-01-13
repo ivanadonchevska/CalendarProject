@@ -14,11 +14,17 @@ int main(){
     //cal.deleteEvent();
  
    //cal.addEvent();
-    cal.showScedule();
+   // cal.showScedule();
     //cal.listEvents();
+    //cal.showCalendar();
+
+    //cout << cal.getStartingDay();
+    //cal.setStartingDay("Mon");
+    //cout << cal.getStartingDay();
+
+    //cal.changeStartingDay();
+    cal.changeStartingDay();
     cal.showCalendar();
-
-
    
 }
 
