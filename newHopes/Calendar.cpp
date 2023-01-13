@@ -19,6 +19,7 @@ string Calendar::getStartingDay() {
 void Calendar::setStartingDay(string newStartingDay) {
 	startingDay = newStartingDay;
 }
+
 void Calendar::startMenu() {
 	int wDay = currentDate.getWeekDay();
 	int day = currentDate.getDay();
@@ -48,7 +49,7 @@ void Calendar::startMenu() {
 		//showScedule(); //do it!!
 		break;
 	case 3:
-		listEvents();
+		Calendar::listEvents();
 		break;
 	case 4:
 		addEvent();
@@ -68,11 +69,11 @@ void Calendar::startMenu() {
 bool Calendar::doesEventExist(string eventToFind) {
 	string line;
 	ifstream Read;
-	Read.open("newText3.txt");
+	Read.open("newText4.txt");
 
 	while (getline(Read, line)) {
 		if (line.find(eventToFind) != string::npos) {
-			cout << "This event name already exist! Try another one." << endl;
+			cout << "This event name already exist! Try another one. \n";
 			return true;
 		}
 	}
@@ -111,14 +112,13 @@ bool compare(Event& lhs, Event& rhs) {
 
 void Calendar::addEvent() {
 	ofstream Write;
-	Write.open("newText3.txt", ofstream::app);
+	Write.open("newText4.txt", ofstream::app);
 	Event event;
 
 	cout << "Enter name: ";
 	do {
 		getline(cin, event.eventName);
 	} while (doesEventExist(event.eventName));
-
 	Write << event.eventName << " ";
 
 	
@@ -137,8 +137,9 @@ void Calendar::addEvent() {
 	cout << "Event added successfully!";
 }
 
+//make comment if there is no events!!!
 void Calendar::listEvents() {
-	ifstream Read("newText3.txt");
+	ifstream Read("newText4.txt");
 	string line;
 	
 	while (getline(Read, line)) {
@@ -215,7 +216,7 @@ void Calendar::deleteEvent() {
 	string line;
 
 	ifstream Delete;
-	Delete.open("newText3.txt");
+	Delete.open("newText4.txt");
 	ofstream temp;
 	temp.open("temp.txt");
 	cout << "Enter name: "; //input line to remove
@@ -230,8 +231,8 @@ void Calendar::deleteEvent() {
 
 	temp.close();
 	Delete.close();
-	remove("newText3.txt");
-	rename("temp.txt", "newText3.txt");
+	remove("newText4.txt");
+	rename("temp.txt", "newText4.txt");
 
 	cout << "Event deleted successfully!";
 }
