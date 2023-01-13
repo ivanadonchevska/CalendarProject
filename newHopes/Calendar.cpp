@@ -3,13 +3,13 @@
 #include <string>
 #include <iomanip>
 #include <algorithm>
-
-
 #include "Calendar.h"
+
 using namespace std;
 
-const int DAYS_NUMBER = 7;
+//MAKE FILE NAME AS VARIABLEEE!!!!!!!!
 
+const int DAYS_NUMBER = 7;
 
 Calendar::Calendar() {}
 
@@ -49,7 +49,7 @@ void Calendar::startMenu() {
 		showScedule(); //do it!!
 		break;
 	case 3:
-		Calendar::listEvents();
+		listEvents();
 		break;
 	case 4:
 		addEvent();
@@ -66,6 +66,7 @@ void Calendar::startMenu() {
 	}
 }
 
+//fix it not to print this message when call from start menu
 bool Calendar::doesEventExist(string eventToFind) {
 	string line;
 	ifstream Read;
@@ -90,10 +91,8 @@ string YYYY_MM_DD(string dateTime) {
 
 	s1.erase(0, 2);
 	s1.erase(s1.size() - 4);
-	//cout << s1 << endl;
 	s1.insert(0, year);
 	s1.insert(8, day);
-	//cout << s1;
 
 	return s1;
 }
@@ -103,10 +102,6 @@ bool compare(Event& lhs, Event& rhs) {
 		return true;
 	if (YYYY_MM_DD(lhs.startDate) == YYYY_MM_DD(rhs.startDate) && lhs.eventName < rhs.eventName)
 		return true;
-	//if (lhs.startYear == rhs.startYear && lhs.startMonth == rhs.startMonth && lhs.startDay < rhs.startDay)
-		//return true;
-	//if (lhs.startYear == rhs.startYear && lhs.startMonth == rhs.startMonth && lhs.startDay == rhs.startDay && lhs.eventName < rhs.eventName)
-		//return true;
 	return false;
 }
 
@@ -120,11 +115,11 @@ void Calendar::addEvent() {
 		getline(cin, event.eventName);
 	} while (doesEventExist(event.eventName));
 	Write << event.eventName << "-";
-
 	
 	cout << "Enter start date (DD/MM/YYYY): ";
 	cin >> event.startDate;
 	Write << event.startDate << "-";
+
 	cout << "Enter end date (DD/MM/YYYY): ";
 	cin >> event.endDate;
 	while (event.endDate < event.startDate) {
@@ -221,12 +216,10 @@ void Calendar::deleteEvent() {
 	temp.open("temp.txt");
 	cout << "Enter name: "; //input line to remove
 	getline(cin, deleteEvent);
-	//cin >> deleteEvent;
 
 	while (getline(Delete, line)){
 		string id(line.begin(), line.begin() + line.find("-"));
 		if (id != deleteEvent)
-		//line.replace(line.find(deleteEvent), deleteEvent.length(), "");
 			temp << line << endl;
 	}
 
@@ -238,9 +231,7 @@ void Calendar::deleteEvent() {
 	cout << "Event deleted successfully!";
 }
 
-int Calendar::FirstDayOfMonth(int day, int month, int year)
-{
-	//int d = 1;
+int Calendar::DayOfMonth(int day, int month, int year){
 	static int t[] = { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 };
 	year -= month < 3;
 	return (year + year / 4 - year / 100 + year / 400 + t[month - 1] + day) % 7;
@@ -263,15 +254,25 @@ int Calendar::getNumberOfDays(int month, int year) {
 		return 30;
 }
 
-void Calendar::setFirstDay() {
+void Calendar::setFirstDay(int month, int year) {
+	int currentDay = 0;
+	if (currentDate.getMonth() == month && currentDate.getYear() == year) {
+		currentDay = currentDate.getWeekDay();
+	}
 	if (startingDay == "Sun") {
 		for (int i = 0; i < DAYS_NUMBER; i++) {
-			cout << Date::dayNames[i] << " ";
+			if (i == currentDay && currentDate.getMonth() == month && currentDate.getYear() == year)
+				cout << "[" << Date::dayNames[i] << "]" << " ";
+			else 
+				cout << Date::dayNames[i] << " ";
 		}
 	}
 	else if (startingDay == "Mon") {
 		for (int i = 1; i < DAYS_NUMBER + 1; i++) {
-			cout << Date::dayNames[i] << " ";
+			if (i == currentDay + 1 && currentDate.getMonth() == month && currentDate.getYear() == year)
+				cout << "[" << Date::dayNames[i] << "]" << " ";
+			else 
+				cout << Date::dayNames[i] << " ";
 		}
 	}
 }
@@ -281,6 +282,8 @@ void Calendar::showCalendar() {
 	int year; // = currentDate.getYear();
 	int month; //= currentDate.getMonth();
 	char ch;
+	cout << currentDate.getDay() << endl;
+	cout << currentDate.getMonth() << endl;
 	cout << "Enter month (MM/YYYY): ";
 
 	cin >> month >> ch >> year;
@@ -288,17 +291,60 @@ void Calendar::showCalendar() {
 	cout << "    " << Date::monthNames[month - 1];
 	cout << "    " << year << endl;
 
-	setFirstDay();
+	setFirstDay(month, year);
 
 	cout << endl;
+	//read the file and insert to map needed data
+	ifstream Read("newText5.txt");
+	string line;
+
+	while (getline(Read, line)) {
+		istringstream iss(line);
+		string substr;
+		vector<string> substrs;
+
+		while (getline(iss, substr, '-')) {
+			substrs.push_back(substr);
+		}
+		Event event;
+		event.eventName = substrs[0];
+		event.startDate = substrs[1];
+		event.endDate = substrs[2];
+
+		vector<int> IntStartDate;
+		IntStartDate = fromStringToVector(event.startDate);
+		vector<int> IntEndDate;
+		IntEndDate = fromStringToVector(event.endDate);
+
+		if (month == IntStartDate[1] && year == IntStartDate[2]) {
+			if(event.startDate == event.endDate) //add only one event to this data, because it starts and ends on the same date
+				storeEvents[IntStartDate[0]]++;
+			else {
+				int startFrom = IntStartDate[0];
+				int counter = 1;
+				int numOfEvents = 0; 
+				numOfEvents = IntEndDate[0] - IntStartDate[0] + 1;
+				while (startFrom <= IntEndDate[0] && startFrom <= getNumberOfDays(IntStartDate[1], IntStartDate[2])) {
+					storeEvents[startFrom]++;
+					startFrom++;
+					counter++;
+				}
+			}
+		}
+		else
+			continue;
+	}
+	Read.close();
+
+
 
 	//  Tomohiko Sakamoto's Algorithm
 	int day = 1;
 	int startDay = 0;
 	if (startingDay == "Sun")
-		startDay = FirstDayOfMonth(day, month, year);
+		startDay = DayOfMonth(day, month, year);
 	else if (startingDay == "Mon") {
-		startDay = FirstDayOfMonth(day, month, year);
+		startDay = DayOfMonth(day, month, year);
 		if (startDay == 0) {
 			startDay += 6;
 		}
@@ -308,20 +354,39 @@ void Calendar::showCalendar() {
 	}
 	int dayCount = getNumberOfDays(month, year);
 
-
 	//Print and empty space if the day doesn't have a corresponding day 
 	for (int x = 0; x < startDay; ++x) {
-		cout << "    ";
+		std::cout << "    ";
 	}
-
 
 	//Print the date corresponding with the day 
 	for (int d = 0; d < dayCount; ++d) {
-		if (d < 9)
-
-			cout << "0" << d + 1 << "  ";
-		else
-			cout << d + 1 << "  ";
+		if (d < 9) {
+			if (storeEvents.find(d + 1) != storeEvents.end()) {
+				for (auto& x : storeEvents) {
+					if (x.first == d + 1)
+						cout << "0" << d + 1 << "(" << x.second << ")";
+				}
+			}
+			//else if for case when current day plus events
+			else
+				cout << "0" << d + 1 << "  ";
+			//if(currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year && storeEvents.find(d) != storeEvents.end())
+				//cout << "[0" << d + 1 << "] ";
+		}
+		else {
+			if (storeEvents.find(d + 1) != storeEvents.end()) {
+				for (auto& x : storeEvents) {
+					if (x.first == d + 1)
+						cout << d + 1 << "(" << x.second << ")";
+					//if (currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year)
+						//cout <<"[" << d + 1 << "] ";
+				}
+			}
+			else
+				cout << d + 1 << "  ";
+	
+		}
 		startDay++;
 		if (startDay == 7) {
 			startDay = 0;
@@ -330,6 +395,10 @@ void Calendar::showCalendar() {
 	}
 
 	cout << endl;
+
+	for (auto& x : storeEvents) {
+		cout << x.first << " " << x.second << endl;
+	}
 }
 
 //if called this function should change starting day when call print calendar??
@@ -412,7 +481,7 @@ void Calendar::listEvents() {
 		vector<int> IntEndDate;
 		IntEndDate = fromStringToVector(event.endDate);
 
-		if (IntStartDate[1] == IntMonth) { //push_back in vector only events that start on inserted month
+		if (IntStartDate[1] == IntMonth) { //insert in map only events that start on inserted month
 			if (event.startDate == event.endDate) {
 				mp[IntStartDate[0]].insert(event.eventName);
 			}
@@ -436,7 +505,7 @@ void Calendar::listEvents() {
 	Read.close();
 	
 	for (auto& x : mp) {	
-		int startWeekDay = FirstDayOfMonth(x.first, IntMonth, IntYear);
+		int startWeekDay = DayOfMonth(x.first, IntMonth, IntYear);
 		cout << Date::shortWeekDays[startWeekDay] << ", " << x.first << "\t";
 		for (auto& y : x.second) {
 			cout << y << "\n";

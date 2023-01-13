@@ -15,6 +15,7 @@ private:
 	vector<Event> events;
 	string startingDay = "Sun";
 	map <int, set<string>> mp;
+	map<int, int> storeEvents;
 	//is it possible to make it glogal somehow and change it
 public:
 	
@@ -31,9 +32,9 @@ public:
 
 	vector<int> fromStringToVector(string);
 
-	int FirstDayOfMonth(int, int, int);
+	int DayOfMonth(int, int, int);
 	int getNumberOfDays(int, int);
-	void setFirstDay();
+	void setFirstDay(int, int);
 	void showCalendar();
 
 	void showScedule(); //?
