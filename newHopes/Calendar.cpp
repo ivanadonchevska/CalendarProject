@@ -308,14 +308,9 @@ void Calendar::showCalendar() {
 				storeEvents[IntStartDate[0]]++;
 			else {
 				int startFrom = IntStartDate[0];
-				int counter = 1;
-				//not sure why need this variable but let see 
-				//int numOfEvents = 0; 
-				//numOfEvents = IntEndDate[0] - IntStartDate[0] + 1;
-				while (startFrom <= IntEndDate[0] && startFrom <= getNumberOfDays(IntStartDate[1], IntStartDate[2])) {
+				while (startFrom <= IntEndDate[0] || startFrom <= getNumberOfDays(IntStartDate[1], IntStartDate[2])) {
 					storeEvents[startFrom]++;
 					startFrom++;
-					counter++;
 				}
 			}
 		}
@@ -323,6 +318,8 @@ void Calendar::showCalendar() {
 			continue;
 	}
 	Read.close();
+
+	
 
 	//  Tomohiko Sakamoto's Algorithm
 	int day = 1;
@@ -396,9 +393,9 @@ void Calendar::showCalendar() {
 
 	cout << endl;
 
-	//for (auto& x : storeEvents) {
-	//	cout << x.first << " " << x.second << endl;
-	//}
+	for (auto& x : storeEvents) {
+		cout << x.first << " " << x.second << endl;
+	}
 }
 
 //if called this function should change starting day when call print calendar??
