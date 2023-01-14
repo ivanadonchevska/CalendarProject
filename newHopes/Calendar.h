@@ -35,6 +35,7 @@ public:
 
 	int DayOfMonth(int, int, int);
 	int getNumberOfDays(int, int);
+	int getDifference(vector<int>, vector<int>); //to find difference between two dates
 	void setFirstDay(int, int);
 	void showCalendar();
 
@@ -43,4 +44,5 @@ public:
 	void deleteEvent(); //delete event from file
 	void changeStartingDay(); //fix it to work okey
 
+	
 };

@@ -90,3 +90,22 @@ const string Date::shortWeekDays[7] = {
     "Fr",
     "Sa"
 };
+
+const int Date::monthDays[12] = {
+        31, 28, 31, 30, 31, 30,
+       31, 31, 30, 31, 30, 31
+};
+
+int Date::countLeapYears(vector<int> date) {
+    int years = date[2];
+    // Check if the current year needs to be
+    //  considered for the count of leap years
+    // or not
+    if (date[1] <= 2)
+        years--;
+    // An year is a leap year if it 
+    // is a multiple of 4,
+    // multiple of 400 and not a 
+     // multiple of 100.
+    return years / 4 - years / 100 + years / 400;
+}

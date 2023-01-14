@@ -215,6 +215,32 @@ int Calendar::getNumberOfDays(int month, int year) {
 		return 30;
 }
 
+
+//using fromStringToVector for input data
+int Calendar::getDifference(vector<int> date1, vector<int> date2) {
+	// initialize count using years and day
+	long int n1 = date1[2] * 365 + date1[0];
+
+	// Add days for months in given date
+	for (int i = 0; i < date1[1] - 1; i++)
+		n1 += Date::monthDays[i];
+
+	// Since every leap year is of 366 days,
+	// Add a day for every leap year
+	n1 += Date::countLeapYears(date1);
+
+	// SIMILARLY, COUNT TOTAL NUMBER OF
+	// DAYS BEFORE 'dt2'
+
+	long int n2 = date2[2] * 365 + date2[0];
+	for (int i = 0; i < date2[1] - 1; i++)
+		n2 += Date::monthDays[i];
+	n2 += Date::countLeapYears(date2);
+
+	// return difference between two counts
+	return (n2 - n1) + 1;
+}
+
 void Calendar::setFirstDay(int month, int year) {
 	int currentDay = 0;
 	if (currentDate.getMonth() == month && currentDate.getYear() == year) {
@@ -283,8 +309,9 @@ void Calendar::showCalendar() {
 			else {
 				int startFrom = IntStartDate[0];
 				int counter = 1;
-				int numOfEvents = 0; 
-				numOfEvents = IntEndDate[0] - IntStartDate[0] + 1;
+				//not sure why need this variable but let see 
+				//int numOfEvents = 0; 
+				//numOfEvents = IntEndDate[0] - IntStartDate[0] + 1;
 				while (startFrom <= IntEndDate[0] && startFrom <= getNumberOfDays(IntStartDate[1], IntStartDate[2])) {
 					storeEvents[startFrom]++;
 					startFrom++;
@@ -423,6 +450,11 @@ void Calendar::listEvents() {
 	int IntMonth = stoi(month); //stoi is used to convert string to integer
 	string year = monthAndYear.substr(3, 6);
 	int IntYear = stoi(year);
+	vector<int> insertedDate; //to have current date as vector, so can use it if current month is not startMonth but also has events
+	insertedDate.push_back(1); //to start from first day of the month
+	insertedDate.push_back(IntMonth);
+	insertedDate.push_back(IntYear);
+
 	cout << "\n";
 	cout << Date::monthNames[IntMonth - 1] << " " << year << "\n";
 	cout << "------------\n"; //if possible make it long as string month + year
@@ -450,7 +482,10 @@ void Calendar::listEvents() {
 		IntStartDate = fromStringToVector(event.startDate);
 		vector<int> IntEndDate;
 		IntEndDate = fromStringToVector(event.endDate);
+		
 
+		//make anohter code (function) to check if month/year is betveen start and end are in more than one month
+		//can be added + IntStartDate[2] == IntYear
 		if (IntStartDate[1] == IntMonth) { //insert in map only events that start on inserted month
 			if (event.startDate == event.endDate) {
 				mp[IntStartDate[0]].insert(event.eventName);
@@ -459,12 +494,12 @@ void Calendar::listEvents() {
 				int startFrom = IntStartDate[0];
 				int counter = 1;
 				int numOfEvents = 0; //this variable is to store difference between first and last day of given event, so we can count how many events are
-				if (IntEndDate[0] > IntStartDate[0])
-					numOfEvents = IntEndDate[0] - IntStartDate[0] + 1;
-				else {
-					numOfEvents = (getNumberOfDays(IntStartDate[1], IntStartDate[2]) - IntStartDate[0]) + IntEndDate[0] + 1;
-				}
-				//&& startFrom <= getNumberOfDays(IntStartDate[1], IntStartDate[2]) + 1
+				//if (IntEndDate[0] > IntStartDate[0])
+					//numOfEvents = IntEndDate[0] - IntStartDate[0] + 1;
+				//else {
+					//numOfEvents = (getNumberOfDays(IntStartDate[1], IntStartDate[2]) - IntStartDate[0]) + IntEndDate[0] + 1;
+				//}
+				numOfEvents = getDifference(IntStartDate, IntEndDate);
 				int eventsCnt = 0;
 				while (eventsCnt < numOfEvents && startFrom <= getNumberOfDays(IntStartDate[1], IntStartDate[2])) {
 					string fullEventName = event.eventName + " (Day " + to_string(counter) + "/" + to_string(numOfEvents) + ")";
@@ -473,6 +508,20 @@ void Calendar::listEvents() {
 					counter++;
 					eventsCnt++;
 				}
+			}
+		}
+		//IntMonth >= IntStartDate
+		//if not inserted month but between start and end date it also includes events
+		else if (IntMonth > IntStartDate[1] && IntYear >= IntStartDate[2] && IntMonth <= IntEndDate[1] && IntYear <= IntEndDate[2]) {
+			int startFrom = 1; //start from first day of month
+			int numOfPassedEvents = getDifference(IntStartDate, insertedDate); //to count how many events are passed and from which one to start
+			int numOfEvents = 0;
+			numOfEvents = getDifference(IntStartDate, IntEndDate);
+			while (numOfPassedEvents <= numOfEvents && startFrom < getNumberOfDays(IntStartDate[1], IntStartDate[2])) {
+				string fullEventName = event.eventName + " (Day " + to_string(numOfPassedEvents) + "/" + to_string(numOfEvents) + ")";
+				mp[startFrom].insert(fullEventName);
+				startFrom++;
+				numOfPassedEvents++;
 			}
 		}
 		else

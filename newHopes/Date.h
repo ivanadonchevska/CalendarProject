@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -30,8 +31,8 @@ public:
 	static const string monthNames[12];
 	static const string weekDays[7];
 	static const string shortWeekDays[7];
-
-
+	static const int monthDays[12];
+	static int countLeapYears(vector<int>);
 	//string toString() const;
 
 };
