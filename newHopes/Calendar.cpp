@@ -269,6 +269,16 @@ void Calendar::showCalendar() {
 	int year; // = currentDate.getYear();
 	int month; //= currentDate.getMonth();
 	char ch;
+	vector<int> insertedStartDate; 
+	insertedStartDate.push_back(1);
+	insertedStartDate.push_back(month);
+	insertedStartDate.push_back(year);
+	vector<int> insertedEndDate;
+	insertedEndDate.push_back(getNumberOfDays(month, year));
+	insertedEndDate.push_back(month);
+	insertedEndDate.push_back(year);
+
+
 	//cout << currentDate.getDay() << endl;
 	//cout << currentDate.getMonth() << endl;
 	cout << "Enter month (MM/YYYY): ";
@@ -303,11 +313,28 @@ void Calendar::showCalendar() {
 		vector<int> IntEndDate;
 		IntEndDate = fromStringToVector(event.endDate);
 
+		//cout << "EndDate[0]" << IntEndDate[0] << endl;
+
 		if (month == IntStartDate[1] && year == IntStartDate[2]) {
 			if(event.startDate == event.endDate) //add only one event to this data, because it starts and ends on the same date
 				storeEvents[IntStartDate[0]]++;
 			else {
 				int startFrom = IntStartDate[0];
+				while (startFrom <= IntEndDate[0] || startFrom <= getNumberOfDays(IntStartDate[1], IntStartDate[2])) {
+					storeEvents[startFrom]++;
+					startFrom++;
+				}
+			}
+		}
+		else if (month > IntStartDate[1] && year >= IntStartDate[2] && month <= IntEndDate[1] && year <= IntEndDate[2]) {
+			int startFrom = 1; //start from first day of month
+			if (month == IntEndDate[1]) { //in case when inserted month is the same as endMonth
+				while (startFrom <= IntEndDate[0] && startFrom <= getNumberOfDays(IntStartDate[1], IntStartDate[2])) {
+					storeEvents[startFrom]++;
+					startFrom++;
+				}
+			}
+			else { //case when month is full and endDay is not in it
 				while (startFrom <= IntEndDate[0] || startFrom <= getNumberOfDays(IntStartDate[1], IntStartDate[2])) {
 					storeEvents[startFrom]++;
 					startFrom++;
@@ -375,7 +402,7 @@ void Calendar::showCalendar() {
 			else if (storeEvents.find(d + 1) != storeEvents.end()) {
 				for (auto& x : storeEvents) {
 					if (x.first == d + 1)
-						cout << d + 1 << "(" << x.second << ") ";
+						cout << " " << d + 1 << "(" << x.second << ") ";
 				}
 			}
 			else if(storeEvents.find(d + 1) == storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year)
@@ -393,9 +420,9 @@ void Calendar::showCalendar() {
 
 	cout << endl;
 
-	for (auto& x : storeEvents) {
-		cout << x.first << " " << x.second << endl;
-	}
+	//for (auto& x : storeEvents) {
+		//cout << x.first << " " << x.second << endl;
+	//}
 }
 
 //if called this function should change starting day when call print calendar??
