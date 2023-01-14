@@ -7,8 +7,6 @@
 
 using namespace std;
 
-//MAKE FILE NAME AS VARIABLEEE!!!!!!!!
-
 const int DAYS_NUMBER = 7;
 
 Calendar::Calendar() {}
@@ -122,7 +120,8 @@ void Calendar::addEvent() {
 
 	cout << "Enter end date (DD/MM/YYYY): ";
 	cin >> event.endDate;
-	while (event.endDate < event.startDate) {
+	
+	while (YYYY_MM_DD(event.endDate) < YYYY_MM_DD(event.startDate)) {
 		cout << "End date can not be before start date. Try again! \n";
 		cin >> event.endDate;
 	}
@@ -428,7 +427,7 @@ void Calendar::listEvents() {
 	cout << Date::monthNames[IntMonth - 1] << " " << year << "\n";
 	cout << "------------\n"; //if possible make it long as string month + year
 
-	ifstream Read("newText5.txt");
+	ifstream Read("newText5.txt"); //newText5.txt
 	string line;
 
 	if (events.size() != 0)
@@ -460,12 +459,19 @@ void Calendar::listEvents() {
 				int startFrom = IntStartDate[0];
 				int counter = 1;
 				int numOfEvents = 0; //this variable is to store difference between first and last day of given event, so we can count how many events are
-				numOfEvents = IntEndDate[0] - IntStartDate[0] + 1;
-				while (startFrom <= IntEndDate[0] && startFrom <= getNumberOfDays(IntStartDate[1], IntStartDate[2])) {
+				if (IntEndDate[0] > IntStartDate[0])
+					numOfEvents = IntEndDate[0] - IntStartDate[0] + 1;
+				else {
+					numOfEvents = (getNumberOfDays(IntStartDate[1], IntStartDate[2]) - IntStartDate[0]) + IntEndDate[0] + 1;
+				}
+				//&& startFrom <= getNumberOfDays(IntStartDate[1], IntStartDate[2]) + 1
+				int eventsCnt = 0;
+				while (eventsCnt < numOfEvents && startFrom <= getNumberOfDays(IntStartDate[1], IntStartDate[2])) {
 					string fullEventName = event.eventName + " (Day " + to_string(counter) + "/" + to_string(numOfEvents) + ")";
 					mp[startFrom].insert(fullEventName);
 					startFrom++;
 					counter++;
+					eventsCnt++;
 				}
 			}
 		}

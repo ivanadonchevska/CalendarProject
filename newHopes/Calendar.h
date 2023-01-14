@@ -16,6 +16,7 @@ private:
 	string startingDay = "Sun";
 	map <int, set<string>> mp;
 	map<int, int> storeEvents;
+	
 	//is it possible to make it glogal somehow and change it
 public:
 	

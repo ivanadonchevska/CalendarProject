@@ -14,8 +14,8 @@ int main(){
     //cal.deleteEvent();
  
    //cal.addEvent();
-   //cal.showScedule();
-    cal.listEvents();
+   cal.showScedule();
+   cal.listEvents();
     //cal.showCalendar();
 
     //cout << cal.getStartingDay();
@@ -25,6 +25,7 @@ int main(){
     //cal.changeStartingDay();
     //cal.changeStartingDay();
     //cal.showCalendar();
+
    
 }
 
