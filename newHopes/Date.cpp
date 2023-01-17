@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <ctime>
 #include <string>
@@ -5,13 +6,13 @@
 #include "date.h"
 
 Date::Date() {
-    time_t t = time(NULL); //or 0 insead of null
-    struct tm now;
-    localtime_s(&now, &t);
-    year = now.tm_year + 1900;
-    month = now.tm_mon + 1;
-    day = now.tm_mday;
-    weekDay = now.tm_wday;
+    time_t t = time(NULL); //or 0 instead of null
+    struct tm* now = localtime(&t);
+    //localtime_s(&now, &t);
+    year = now->tm_year + 1900;
+    month = now->tm_mon + 1;
+    day = now->tm_mday;
+    weekDay = now->tm_wday;
 }
 
 void Date::setDay(int d) {

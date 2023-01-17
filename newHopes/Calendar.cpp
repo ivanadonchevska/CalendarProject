@@ -14,8 +14,12 @@ Calendar::Calendar() {}
 string Calendar::getStartingDay() {
 	return startingDay;
 }
-void Calendar::setStartingDay(string newStartingDay) {
-	startingDay = newStartingDay;
+void Calendar::writeToFileStartingDay() {
+	//write to file default startingDay
+	ofstream Write;
+	Write.open("startingDate.txt", ofstream::app);
+	Write << startingDay;
+	Write.close();
 }
 
 void Calendar::startMenu() {
@@ -242,11 +246,16 @@ int Calendar::getDifference(vector<int> date1, vector<int> date2) {
 }
 
 void Calendar::setFirstDay(int month, int year) {
+	string currentStartingDay;
+	ifstream Read("StartingDate.txt");
+	while (getline(Read, currentStartingDay)) {
+	}
+
 	int currentDay = 0;
 	if (currentDate.getMonth() == month && currentDate.getYear() == year) {
 		currentDay = currentDate.getWeekDay();
 	}
-	if (startingDay == "Sun") {
+	if (currentStartingDay == "Sun") {
 		for (int i = 0; i < DAYS_NUMBER; i++) {
 			if (i == currentDay && currentDate.getMonth() == month && currentDate.getYear() == year)
 				cout << "[" << Date::dayNames[i] << "]" << "   ";
@@ -254,7 +263,7 @@ void Calendar::setFirstDay(int month, int year) {
 				cout << Date::dayNames[i] << "   ";
 		}
 	}
-	else if (startingDay == "Mon") {
+	else if (currentStartingDay == "Mon") {
 		for (int i = 1; i < DAYS_NUMBER + 1; i++) {
 			if (i == currentDay  && currentDate.getMonth() == month && currentDate.getYear() == year)
 				cout << "[" << Date::dayNames[i] << "]" << "   ";
@@ -262,6 +271,8 @@ void Calendar::setFirstDay(int month, int year) {
 				cout << Date::dayNames[i] << "   ";
 		}
 	}
+
+	Read.close();
 }
 
 //fix it it's not okey
@@ -419,27 +430,36 @@ void Calendar::showCalendar() {
 	}
 
 	cout << endl;
-
-	//for (auto& x : storeEvents) {
-		//cout << x.first << " " << x.second << endl;
-	//}
 }
 
 //if called this function should change starting day when call print calendar??
 //not sure how to do it ^_-
 void Calendar::changeStartingDay() {
+	string currentDay;
 	string changeDay;
 	string wholeDayName;
-	if (getStartingDay() == "Sun")
-		wholeDayName = "Sunday";
-	else if (getStartingDay() == "Mon")
-		wholeDayName = "Monday";
-
+	ifstream Read("StartingDate.txt");
+	ofstream Temp("TempStartingDay.txt");
+	while (getline(Read, currentDay)) {
+		if (currentDay == "Sun")
+			wholeDayName = "Sunday";
+		else if (currentDay == "Mon")
+			wholeDayName = "Monday";
+	}
+	
 	cout << "The first day of the week is currently " << wholeDayName << "." << endl;
 	cout << endl;
 	cout << "Enter new(Mon / Sun): ";
 	cin >> changeDay;
-	setStartingDay(changeDay);
+
+	if (currentDay != changeDay) {
+		Temp << changeDay;
+	}
+
+	Temp.close();
+	Read.close();
+	remove("StartingDate.txt");
+	rename("TempStartingDay.txt", "StartingDate.txt");
 	cout << endl;
 	cout << "Saved!";
 }

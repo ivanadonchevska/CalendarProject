@@ -23,7 +23,7 @@ public:
 	Calendar();
 	
 	string getStartingDay();
-	void setStartingDay(string);
+	void writeToFileStartingDay();
 
 	void startMenu();
 
@@ -42,7 +42,7 @@ public:
 	void showScedule(); //?
 	void listEvents(); //list all events in file
 	void deleteEvent(); //delete event from file
-	void changeStartingDay(); //fix it to work okey
+	void changeStartingDay();
 
 	
 };
