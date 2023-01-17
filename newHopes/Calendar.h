@@ -25,6 +25,8 @@ public:
 	string getStartingDay();
 	void writeToFileStartingDay();
 
+	vector<int> getNextDay(int, int, int);
+	void getScheduledEvents(); //get number of events that are scheduled for current day or the day after
 	void startMenu();
 
 	//helpers for date validation when calling addEvent 

@@ -14,6 +14,122 @@ Calendar::Calendar() {}
 string Calendar::getStartingDay() {
 	return startingDay;
 }
+
+vector<int> Calendar::getNextDay(int day, int month, int year) {
+	vector<int> nextDay;
+	if (day > 0 && day < 28) {  // checking for day from 0 to 27
+		day += 1;
+	}
+	if (day == 28) {
+		if (month == 2) {  // checking for february
+			if ((year % 400 == 0) || (year % 100 != 0 || year % 4 == 0)) {  // leap year check in case of feb
+				day = 29;
+			}
+			else {
+				day = 1;
+				month = 3;
+			}
+		}
+		else {  // when it's not feb
+			day += 1;
+		}
+	}
+	if (day == 29) {  // last day check for feb
+		if (month == 2) {
+			day = 1;
+			month = 3;
+		}
+		else {
+			day += 1;
+		}
+	}
+	if (day == 30) {  // last day check for april, june, september, november
+		if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
+			day += 1;
+		}
+		else {
+			day = 1;
+			month += 1;
+		}
+	}
+	if (day == 31) {  // last day of the month
+		day = 1;
+		if (month == 12) {  // checking for last day of the year
+			year += 1;
+			month = 1;
+		}
+		else {
+			month += 1;
+		}
+	}
+
+	nextDay.push_back(day);
+	nextDay.push_back(month);
+	nextDay.push_back(year);
+
+	return nextDay;
+}
+
+void Calendar::getScheduledEvents() {
+	int day = currentDate.getDay();
+	int month = currentDate.getMonth();
+	int year = currentDate.getYear();
+	vector<int> nextDay = getNextDay(day, month, year);
+	int currentDayEvents = 0; //number of events for current day
+	int nextDayEvents = 0;
+	
+	ifstream Read("newText5.txt");
+	string line;
+
+	while (getline(Read, line)) {
+		istringstream iss(line);
+		string substr;
+		vector<string> substrs;
+
+		while (getline(iss, substr, '-')) {
+			substrs.push_back(substr);
+		}
+		Event event;
+		event.eventName = substrs[0];
+		event.startDate = substrs[1];
+		event.endDate = substrs[2];
+
+		vector<int> IntStartDate;
+		IntStartDate = fromStringToVector(event.startDate);
+		vector<int> IntEndDate;
+		IntEndDate = fromStringToVector(event.endDate);
+
+		if (IntStartDate[0] <= day && IntStartDate[1] <= month && IntStartDate[2] <= year &&
+			day <= IntEndDate[0] && month <= IntEndDate[1] && year <= IntEndDate[2]) {
+			currentDayEvents++;
+		}
+		else if (IntStartDate[0] <= nextDay[0] && IntStartDate[1] <= nextDay[1] && IntStartDate[2] <= nextDay[2] &&
+			nextDay[0] <= IntEndDate[0] && nextDay[1] <= IntEndDate[1] && nextDay[2] <= IntEndDate[2]) {
+			nextDayEvents++;
+		}
+		else
+			continue;
+	}
+	Read.close();
+
+	if (currentDayEvents != 0) {
+		cout << "You have " << currentDayEvents;
+		if (currentDayEvents == 1)
+			cout << " event today. \n";
+		else 
+			cout << " events today. \n";
+	}
+	else if (currentDayEvents == 0 && nextDayEvents != 0) {
+		cout << "You have " << nextDayEvents;
+		if (nextDayEvents == 1)
+			cout << " event tomorrow. \n";
+		else
+			cout << " events tomorrow. \n";
+	}
+	else
+		cout << "There is no scheduled events for today and tomorrow. \n";
+	
+}
 void Calendar::writeToFileStartingDay() {
 	//write to file default startingDay
 	ofstream Write;
@@ -29,6 +145,8 @@ void Calendar::startMenu() {
 	int year = currentDate.getYear();
 
 	cout << "Welcome! Today is " << Date::weekDays[wDay - 1] << ", " << day << " " << Date::monthNames[month - 1] << " " << year << "." << endl;
+	cout << endl;
+	getScheduledEvents();
 	cout << endl;
 	cout << "Choose an option:" << endl;
 	cout << "     1. Show calendar" << endl;
@@ -538,11 +656,6 @@ void Calendar::listEvents() {
 				int startFrom = IntStartDate[0];
 				int counter = 1;
 				int numOfEvents = 0; //this variable is to store difference between first and last day of given event, so we can count how many events are
-				//if (IntEndDate[0] > IntStartDate[0])
-					//numOfEvents = IntEndDate[0] - IntStartDate[0] + 1;
-				//else {
-					//numOfEvents = (getNumberOfDays(IntStartDate[1], IntStartDate[2]) - IntStartDate[0]) + IntEndDate[0] + 1;
-				//}
 				numOfEvents = getDifference(IntStartDate, IntEndDate);
 				int eventsCnt = 0;
 				while (eventsCnt < numOfEvents && startFrom <= getNumberOfDays(IntStartDate[1], IntStartDate[2])) {
@@ -554,7 +667,6 @@ void Calendar::listEvents() {
 				}
 			}
 		}
-		//IntMonth >= IntStartDate
 		//if not inserted month but between start and end date it also includes events
 		else if (IntMonth > IntStartDate[1] && IntYear >= IntStartDate[2] && IntMonth <= IntEndDate[1] && IntYear <= IntEndDate[2]) {
 			int startFrom = 1; //start from first day of month
@@ -570,7 +682,6 @@ void Calendar::listEvents() {
 		}
 		else
 			continue;
-	
 	}
 	Read.close();
 	

@@ -12,14 +12,14 @@ int main(){
 
     Calendar cal;
 
-    //cal.startMenu();
+    cal.startMenu();
    
     //cal.deleteEvent();
  
-   //cal.addEvent();
+    //cal.addEvent();
   // cal.showScedule();
   // cal.listEvents();
-    cal.showCalendar();
+    //cal.showCalendar();
 
     //cout << cal.getStartingDay();
     //cal.setStartingDay("Mon");
@@ -30,6 +30,8 @@ int main(){
 
     //cal.changeStartingDay();
     //cal.showCalendar();
+
+    //cal.getScheduledEvents();
 
    
 }
