@@ -22,7 +22,7 @@ vector<int> Calendar::getNextDay(int day, int month, int year) {
 	}
 	if (day == 28) {
 		if (month == 2) {  // checking for february
-			if ((year % 400 == 0) || (year % 100 != 0 || year % 4 == 0)) {  // leap year check in case of feb
+			if ((year % 400 == 0) || (year % 100 != 0 || year % 4 == 0)) {  // leap year check in case of february
 				day = 29;
 			}
 			else {
@@ -30,11 +30,11 @@ vector<int> Calendar::getNextDay(int day, int month, int year) {
 				month = 3;
 			}
 		}
-		else {  // when it's not feb
+		else {  // when it's not february
 			day += 1;
 		}
 	}
-	if (day == 29) {  // last day check for feb
+	if (day == 29) {  // last day check for february
 		if (month == 2) {
 			day = 1;
 			month = 3;
@@ -76,7 +76,7 @@ void Calendar::getScheduledEvents() {
 	int year = currentDate.getYear();
 	vector<int> nextDay = getNextDay(day, month, year);
 	int currentDayEvents = 0; //number of events for current day
-	int nextDayEvents = 0;
+	int nextDayEvents = 0; //number of events for the day after
 	
 	ifstream Read("newText5.txt");
 	string line;
@@ -194,7 +194,7 @@ bool Calendar::doesEventExist(string eventToFind) {
 
 	while (getline(Read, line)) {
 		if (line.find(eventToFind) != string::npos) {
-			//cout << "This event name already exist! Try another one. \n";
+			cout << "This event name already exist! Try another one. \n";
 			return true;
 		}
 	}
@@ -232,12 +232,9 @@ void Calendar::addEvent() {
 	Event event;
 
 	cout << "Enter name: ";
-	int counter = 0;
 	do {
-		if(counter != 0)
-			cout << "This event name already exist! Try another one. \n";
+		cin >> ws;
 		getline(cin, event.eventName);
-		counter++;
 	} while (doesEventExist(event.eventName));
 	Write << event.eventName << "-";
 	
@@ -357,30 +354,19 @@ int Calendar::getNumberOfDays(int month, int year) {
 		return 30;
 }
 
-
 //using fromStringToVector for input data
 int Calendar::getDifference(vector<int> date1, vector<int> date2) {
-	// initialize count using years and day
-	long int n1 = date1[2] * 365 + date1[0];
-
-	// Add days for months in given date
+	long int counter1 = date1[2] * 365 + date1[0];
 	for (int i = 0; i < date1[1] - 1; i++)
-		n1 += Date::monthDays[i];
+		counter1 += Date::monthDays[i];
+	counter1 += Date::countLeapYears(date1);
 
-	// Since every leap year is of 366 days,
-	// Add a day for every leap year
-	n1 += Date::countLeapYears(date1);
-
-	// SIMILARLY, COUNT TOTAL NUMBER OF
-	// DAYS BEFORE 'dt2'
-
-	long int n2 = date2[2] * 365 + date2[0];
+	long int counter2 = date2[2] * 365 + date2[0];
 	for (int i = 0; i < date2[1] - 1; i++)
-		n2 += Date::monthDays[i];
-	n2 += Date::countLeapYears(date2);
+		counter2 += Date::monthDays[i];
+	counter2 += Date::countLeapYears(date2);
 
-	// return difference between two counts
-	return (n2 - n1) + 1;
+	return (counter2 - counter1) + 1;
 }
 
 void Calendar::setFirstDay(int month, int year, int longest) {
@@ -759,8 +745,6 @@ void Calendar::listEvents() {
 		IntEndDate = fromStringToVector(event.endDate);
 		
 
-		//make anohter code (function) to check if month/year is betveen start and end are in more than one month
-		//can be added + IntStartDate[2] == IntYear
 		if (IntStartDate[1] == IntMonth) { //insert in map only events that start on inserted month
 			if (event.startDate == event.endDate) {
 				mp[IntStartDate[0]].insert(event.eventName);

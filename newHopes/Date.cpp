@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS //to ignore using localtime error
 #include <iostream>
 #include <ctime>
 #include <string>
@@ -6,9 +6,8 @@
 #include "date.h"
 
 Date::Date() {
-    time_t t = time(NULL); //or 0 instead of null
+    time_t t = time(NULL); //or 0 instead of NULL
     struct tm* now = localtime(&t);
-    //localtime_s(&now, &t);
     year = now->tm_year + 1900;
     month = now->tm_mon + 1;
     day = now->tm_mday;
@@ -104,9 +103,6 @@ int Date::countLeapYears(vector<int> date) {
     // or not
     if (date[1] <= 2)
         years--;
-    // An year is a leap year if it 
-    // is a multiple of 4,
-    // multiple of 400 and not a 
-     // multiple of 100.
+    
     return years / 4 - years / 100 + years / 400;
 }
