@@ -16,24 +16,23 @@ private:
 	string startingDay = "Sun";
 	map <int, set<string>> mp;
 	map<int, int> storeEvents;
-	
-	//is it possible to make it glogal somehow and change it
+
 public:
 	
 	Calendar();
 	
 	string getStartingDay();
 	void writeToFileStartingDay();
-
 	vector<int> getNextDay(int, int, int);
 	void getScheduledEvents(); //get number of events that are scheduled for current day or the day after
+
 	void startMenu();
 
-	//helpers for date validation when calling addEvent 
+	//helper function for date validation when calling addEvent 
 	bool doesEventExist(string);
-	void addEvent(); //to add event to file
+	void addEvent(); //add event to file
 
-	vector<int> fromStringToVector(string);
+	vector<int> fromStringToVector(string); 
 
 	int DayOfMonth(int, int, int);
 	int getNumberOfDays(int, int);
@@ -42,10 +41,9 @@ public:
 	void showCalendar();
 	int getLongestStringSize(vector<string>);
 
-	void showScedule(); //?
-	void listEvents(); //list all events in file
+	void showScedule(); //list all events in file
+	void listEvents(); //shows events for entered month
 	void deleteEvent(); //delete event from file
-	void changeStartingDay();
+	void changeStartingDay(); //to change first day when printing calendar
 
-	
 };

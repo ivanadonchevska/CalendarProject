@@ -1,5 +1,4 @@
 #pragma once
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -13,10 +12,8 @@ public:
 	int year;
 	int weekDay; //return number of weekDay
 
-
 	Date();
 
-	//not sure why will need them when parameters are public but ok
 	int getYear();
 	int getMonth();
 	int getDay();
@@ -33,6 +30,5 @@ public:
 	static const string shortWeekDays[7];
 	static const int monthDays[12];
 	static int countLeapYears(vector<int>);
-	//string toString() const;
 
 };

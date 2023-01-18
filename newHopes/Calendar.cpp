@@ -163,10 +163,10 @@ void Calendar::startMenu() {
 
 	switch (choice) {
 	case 1:
-		showCalendar(); //staft from Sunday by default
+		showCalendar(); //start from Sunday by default
 		break;
 	case 2:
-		showScedule(); //do it!!
+		showScedule(); 
 		break;
 	case 3:
 		listEvents();
@@ -194,11 +194,12 @@ bool Calendar::doesEventExist(string eventToFind) {
 
 	while (getline(Read, line)) {
 		if (line.find(eventToFind) != string::npos) {
-			cout << "This event name already exist! Try another one. \n";
+			//cout << "This event name already exist! Try another one. \n";
 			return true;
 		}
 	}
 	Read.close();
+
 	return false;
 	
 }
@@ -231,13 +232,32 @@ void Calendar::addEvent() {
 	Event event;
 
 	cout << "Enter name: ";
+	int counter = 0;
 	do {
+		if(counter != 0)
+			cout << "This event name already exist! Try another one. \n";
 		getline(cin, event.eventName);
+		counter++;
 	} while (doesEventExist(event.eventName));
 	Write << event.eventName << "-";
 	
+	string currentDateString;
+	if (currentDate.day <= 9)
+		currentDateString += "0" + to_string(currentDate.day) + "/";
+	else
+		currentDateString += to_string(currentDate.day) + "/";
+	if (currentDate.month <= 9)
+		currentDateString += "0" + to_string(currentDate.month) + "/";
+	else
+		currentDateString += to_string(currentDate.month) + "/";
+	currentDateString += to_string(currentDate.year);
+	
 	cout << "Enter start date (DD/MM/YYYY): ";
 	cin >> event.startDate;
+	while (YYYY_MM_DD(event.startDate) < YYYY_MM_DD(currentDateString)) {
+		cout << "Past events can not be added. Try again! \n";
+		cin >> event.startDate;
+	}
 	Write << event.startDate << "-";
 
 	cout << "Enter end date (DD/MM/YYYY): ";
@@ -436,10 +456,10 @@ int Calendar::getLongestStringSize(vector<string> printVector) {
 	}
 	return longest;
 }
-//fix it it's not okey
+
 void Calendar::showCalendar() {
-	int year; // = currentDate.getYear();
-	int month; //= currentDate.getMonth();
+	int year = 0; 
+	int month = 0; 
 	char ch;
 	vector<int> insertedStartDate; 
 	insertedStartDate.push_back(1);
@@ -450,9 +470,6 @@ void Calendar::showCalendar() {
 	insertedEndDate.push_back(month);
 	insertedEndDate.push_back(year);
 
-
-	//cout << currentDate.getDay() << endl;
-	//cout << currentDate.getMonth() << endl;
 	cout << "Enter month (MM/YYYY): ";
 
 	cin >> month >> ch >> year;
@@ -481,8 +498,6 @@ void Calendar::showCalendar() {
 		IntStartDate = fromStringToVector(event.startDate);
 		vector<int> IntEndDate;
 		IntEndDate = fromStringToVector(event.endDate);
-
-		//cout << "EndDate[0]" << IntEndDate[0] << endl;
 
 		if (month == IntStartDate[1] && year == IntStartDate[2]) {
 			if(event.startDate == event.endDate) //add only one event to this data, because it starts and ends on the same date
@@ -515,8 +530,6 @@ void Calendar::showCalendar() {
 	}
 	Read.close();
 
-	
-
 	//  Tomohiko Sakamoto's Algorithm
 	int day = 1;
 	int startDay = 0;
@@ -535,7 +548,8 @@ void Calendar::showCalendar() {
 
 	vector<string> printVector;
 	string currentPrint;
-	//Print the date corresponding with the day 
+
+	//Add the date to vector corresponding with the day 
 	for (int d = 0; d < dayCount; ++d) {
 		if (d < 9) {
 			//current day plus has events
@@ -592,8 +606,9 @@ void Calendar::showCalendar() {
 			else if (storeEvents.find(d + 1) == storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year) {
 				currentPrint = "[" + to_string(d + 1) + "]";
 				printVector.push_back(currentPrint);
-			}
 				//cout <<" [" << d + 1 << "]  ";
+			}
+				
 			else {
 				currentPrint = to_string(d + 1);
 				printVector.push_back(currentPrint);
@@ -627,7 +642,7 @@ void Calendar::showCalendar() {
 		else if(x.size() < longest){
 			cout << x << " ";
 			int counter = x.size();
-			while (counter < longest) { //!=
+			while (counter < longest) { 
 				cout << " ";
 				counter++;
 			}
@@ -644,8 +659,6 @@ void Calendar::showCalendar() {
 	cout << endl;
 }
 
-//if called this function should change starting day when call print calendar??
-//not sure how to do it ^_-
 void Calendar::changeStartingDay() {
 	string currentDay;
 	string changeDay;
@@ -662,7 +675,13 @@ void Calendar::changeStartingDay() {
 	cout << "The first day of the week is currently " << wholeDayName << "." << endl;
 	cout << endl;
 	cout << "Enter new(Mon / Sun): ";
-	cin >> changeDay;
+	int counter = 0;
+	do {
+		if (counter != 0)
+			cout << "You can only choose between Mon and Sun for starting day! Try again. \n";
+		cin >> changeDay;
+		counter++;
+	} while (changeDay != "Mon" || changeDay != "Sun");
 
 	if (currentDay != changeDay) {
 		Temp << changeDay;
