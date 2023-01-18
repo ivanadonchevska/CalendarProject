@@ -363,36 +363,79 @@ int Calendar::getDifference(vector<int> date1, vector<int> date2) {
 	return (n2 - n1) + 1;
 }
 
-void Calendar::setFirstDay(int month, int year) {
+void Calendar::setFirstDay(int month, int year, int longest) {
 	string currentStartingDay;
 	ifstream Read("StartingDate.txt");
 	while (getline(Read, currentStartingDay)) {
 	}
 
 	int currentDay = 0;
+	int counter = 0;
 	if (currentDate.getMonth() == month && currentDate.getYear() == year) {
 		currentDay = currentDate.getWeekDay();
 	}
 	if (currentStartingDay == "Sun") {
 		for (int i = 0; i < DAYS_NUMBER; i++) {
-			if (i == currentDay && currentDate.getMonth() == month && currentDate.getYear() == year)
-				cout << "[" << Date::dayNames[i] << "]" << "   ";
-			else 
-				cout << Date::dayNames[i] << "   ";
+			if (i == currentDay && currentDate.getMonth() == month && currentDate.getYear() == year) {
+				cout << "[" << Date::dayNames[i] << "]" << " ";
+				counter = 5; //3 for letters and +2 for []
+				if (counter > longest) {
+					cout << " ";
+				}
+				else {
+					while (counter != longest) {
+						cout << " ";
+						counter++;
+					}
+				}
+			}
+			else {
+				cout << Date::dayNames[i] << " ";
+				counter = 3; //3 for letters
+				if (counter > longest) {
+					cout << " ";
+				}
+				else {
+					while (counter != longest) {
+						cout << " ";
+						counter++;
+					}
+				}
+			}
 		}
 	}
 	else if (currentStartingDay == "Mon") {
 		for (int i = 1; i < DAYS_NUMBER + 1; i++) {
-			if (i == currentDay  && currentDate.getMonth() == month && currentDate.getYear() == year)
-				cout << "[" << Date::dayNames[i] << "]" << "   ";
-			else 
-				cout << Date::dayNames[i] << "   ";
+			if (i == currentDay && currentDate.getMonth() == month && currentDate.getYear() == year) {
+				cout << "[" << Date::dayNames[i] << "]" << " ";
+				counter = 5; //3 for letters and +2 for []
+				while (counter != longest) {
+					cout << " ";
+					counter++;
+				}
+			}
+			else {
+				cout << Date::dayNames[i] << " ";
+				counter = 3; //3 for letters
+				while (counter != longest) {
+					cout << " ";
+					counter++;
+				}
+			}
 		}
 	}
 
 	Read.close();
 }
 
+int Calendar::getLongestStringSize(vector<string> printVector) {
+	int longest = 0;
+	for (auto& element : printVector) {
+		if (element.size() > longest)
+			longest = element.size();
+	}
+	return longest;
+}
 //fix it it's not okey
 void Calendar::showCalendar() {
 	int year; // = currentDate.getYear();
@@ -417,9 +460,6 @@ void Calendar::showCalendar() {
 	cout << "    " << Date::monthNames[month - 1];
 	cout << "    " << year << endl;
 
-	setFirstDay(month, year);
-
-	cout << endl;
 	//read the file and insert to map needed data
 	ifstream Read("newText5.txt");
 	string line;
@@ -493,53 +533,107 @@ void Calendar::showCalendar() {
 	}
 	int dayCount = getNumberOfDays(month, year);
 
-	//Print and empty space if the day doesn't have a corresponding day 
-	for (int x = 0; x < startDay; ++x) {
-		std::cout << "      ";
-	}
-
+	vector<string> printVector;
+	string currentPrint;
 	//Print the date corresponding with the day 
 	for (int d = 0; d < dayCount; ++d) {
 		if (d < 9) {
 			//current day plus has events
 			if (storeEvents.find(d + 1) != storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year) {
 				for (auto& x : storeEvents) {
-					if (x.first == d + 1)
-						cout << " [0" << d + 1 << "](" << x.second << ")";
+					if (x.first == d + 1) {
+						currentPrint = "[0" + to_string(d + 1) + "](" + to_string(x.second) + ")";
+						printVector.push_back(currentPrint);
+						//cout << " [0" << d + 1 << "](" << x.second << ")";
+					}
 				}
 			}
 			//has events and not current day
 			else if (storeEvents.find(d + 1) != storeEvents.end() ) {
 				for (auto& x : storeEvents) {
-					if (x.first == d + 1)
-						cout << " 0" << d + 1 << "(" << x.second << ") ";
+					if (x.first == d + 1) {
+						currentPrint = "0" + to_string(d + 1) + "(" + to_string(x.second) + ")";
+						printVector.push_back(currentPrint);
+						//cout << " 0" << d + 1 << "(" << x.second << ") ";
+					}
 				}
 			}
 			//current day but without events
-			else if(storeEvents.find(d + 1) == storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year)
-				cout << " [0" << d + 1 << "]  ";
-			else
-				cout << " 0" << d + 1 << "   ";
+			else if (storeEvents.find(d + 1) == storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year) {
+				//cout << " [0" << d + 1 << "]  ";
+				currentPrint = "[0" + to_string(d + 1) + "]";
+				printVector.push_back(currentPrint);
+			}
+			else {
+				//cout << " 0" << d + 1 << "   ";
+				currentPrint = "0" + to_string(d + 1);
+				printVector.push_back(currentPrint);
+			}
 		}
 		else {
 			if (storeEvents.find(d + 1) != storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year) {
 				for (auto& x : storeEvents) {
-					if (x.first == d + 1)
-						cout << " [" << d + 1 << "](" << x.second << ")";
+					if (x.first == d + 1) {
+						//cout << " [" << d + 1 << "](" << x.second << ")";
+						currentPrint = "[" + to_string(d + 1) + "](" + to_string(x.second) + ")";
+						printVector.push_back(currentPrint);
+					}
 				}
 			}
 			else if (storeEvents.find(d + 1) != storeEvents.end()) {
 				for (auto& x : storeEvents) {
-					if (x.first == d + 1)
-						cout << " " << d + 1 << "(" << x.second << ") ";
+					if (x.first == d + 1) {
+						//cout << " " << d + 1 << "(" << x.second << ") ";
+						currentPrint = to_string(d + 1) + "(" + to_string(x.second) + ")";
+						printVector.push_back(currentPrint);
+					}
 				}
 			}
-			else if(storeEvents.find(d + 1) == storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year)
-				cout <<" [" << d + 1 << "]  ";
-			else
-				cout << " " << d + 1 << "   ";
+			else if (storeEvents.find(d + 1) == storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year) {
+				currentPrint = "[" + to_string(d + 1) + "]";
+				printVector.push_back(currentPrint);
+			}
+				//cout <<" [" << d + 1 << "]  ";
+			else {
+				currentPrint = to_string(d + 1);
+				printVector.push_back(currentPrint);
+				//cout << " " << d + 1 << "   ";
+			}
 	
 		}
+		
+	}
+
+	int longest = getLongestStringSize(printVector);
+	setFirstDay(month, year, longest);
+	cout << endl;
+
+	//Print and empty space if the day doesn't have a corresponding day 
+	if (longest != 2) {
+		for (int x = 0; x < startDay; ++x) {
+			std::cout << "      ";
+		}
+	}
+	else {
+		for (int x = 0; x < startDay; ++x) {
+			std::cout << "     ";
+		}
+	}
+
+	for (auto& x : printVector) {
+		if (longest == 2) {
+			cout << x << "   ";
+		}
+		else if(x.size() < longest){
+			cout << x << " ";
+			int counter = x.size();
+			while (counter < longest) { //!=
+				cout << " ";
+				counter++;
+			}
+		}
+		else
+			cout << x << " ";
 		startDay++;
 		if (startDay == 7) {
 			startDay = 0;

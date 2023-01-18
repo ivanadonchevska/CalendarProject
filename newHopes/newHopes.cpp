@@ -12,7 +12,7 @@ int main(){
 
     Calendar cal;
 
-    cal.startMenu();
+    //cal.startMenu();
    
     //cal.deleteEvent();
  
@@ -29,7 +29,7 @@ int main(){
     //cal.writeToFileStartingDay();
 
     //cal.changeStartingDay();
-    //cal.showCalendar();
+    cal.showCalendar();
 
     //cal.getScheduledEvents();
 

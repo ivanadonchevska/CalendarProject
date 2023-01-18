@@ -38,8 +38,9 @@ public:
 	int DayOfMonth(int, int, int);
 	int getNumberOfDays(int, int);
 	int getDifference(vector<int>, vector<int>); //to find difference between two dates
-	void setFirstDay(int, int);
+	void setFirstDay(int, int, int);
 	void showCalendar();
+	int getLongestStringSize(vector<string>);
 
 	void showScedule(); //?
 	void listEvents(); //list all events in file
