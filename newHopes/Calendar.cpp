@@ -78,7 +78,7 @@ void Calendar::getScheduledEvents() {
 	int currentDayEvents = 0; //number of events for current day
 	int nextDayEvents = 0; //number of events for the day after
 	
-	ifstream Read("newText5.txt");
+	ifstream Read("Events.txt");
 	string line;
 
 	while (getline(Read, line)) {
@@ -160,6 +160,7 @@ void Calendar::startMenu() {
 	int choice;
 	cout << "Enter your choice: ";
 	cin >> choice;
+	cout << endl;
 
 	switch (choice) {
 	case 1:
@@ -186,15 +187,14 @@ void Calendar::startMenu() {
 	}
 }
 
-//fix it not to print this message when call from start menu
+
 bool Calendar::doesEventExist(string eventToFind) {
 	string line;
 	ifstream Read;
-	Read.open("newText5.txt");
+	Read.open("Events.txt");
 
 	while (getline(Read, line)) {
 		if (line.find(eventToFind) != string::npos) {
-			cout << "This event name already exist! Try another one. \n";
 			return true;
 		}
 	}
@@ -228,13 +228,17 @@ bool compare(Event& lhs, Event& rhs) {
 
 void Calendar::addEvent() {
 	ofstream Write;
-	Write.open("newText5.txt", ofstream::app);
+	Write.open("Events.txt", ofstream::app);
 	Event event;
 
 	cout << "Enter name: ";
+	int counter = 0;
 	do {
+		if(counter != 0)
+			cout << "This event name already exist! Try another one. \n";
 		cin >> ws;
 		getline(cin, event.eventName);
+		counter++;
 	} while (doesEventExist(event.eventName));
 	Write << event.eventName << "-";
 	
@@ -272,7 +276,7 @@ void Calendar::addEvent() {
 
 //make comment if there is no events!!!
 void Calendar::showScedule() {
-	ifstream Read("newText5.txt");
+	ifstream Read("Events.txt");
 	string line;
 	
 	while (getline(Read, line)) {
@@ -311,24 +315,28 @@ void Calendar::deleteEvent() {
 	string line;
 
 	ifstream Delete;
-	Delete.open("newText5.txt");
+	Delete.open("Events.txt");
 	ofstream temp;
 	temp.open("temp.txt");
-	cout << "Enter name: "; //input line to remove
+	cout << "Enter name: "; //to delete line that contains inserted event name
+	cin >> ws;
 	getline(cin, deleteEvent);
 
-	while (getline(Delete, line)){
-		string id(line.begin(), line.begin() + line.find("-"));
-		if (id != deleteEvent)
-			temp << line << endl;
+	if (doesEventExist(deleteEvent) == false) {
+		cout << "Can't delete event, that not exist! \n";
 	}
-
-	temp.close();
-	Delete.close();
-	remove("newText5.txt");
-	rename("temp.txt", "newText5.txt");
-
-	cout << "Event deleted successfully!";
+	else {
+		while (getline(Delete, line)) {
+			string id(line.begin(), line.begin() + line.find("-"));
+			if (id != deleteEvent)
+				temp << line << endl;
+		}
+		cout << "Event deleted successfully!";
+		temp.close();
+		Delete.close();
+		remove("Events.txt");
+		rename("temp.txt", "Events.txt");
+	}
 }
 
 int Calendar::DayOfMonth(int day, int month, int year){
@@ -415,17 +423,27 @@ void Calendar::setFirstDay(int month, int year, int longest) {
 			if (i == currentDay && currentDate.getMonth() == month && currentDate.getYear() == year) {
 				cout << "[" << Date::dayNames[i] << "]" << " ";
 				counter = 5; //3 for letters and +2 for []
-				while (counter != longest) {
+				if (counter > longest) {
 					cout << " ";
-					counter++;
+				}
+				else {
+					while (counter != longest) {
+						cout << " ";
+						counter++;
+					}
 				}
 			}
 			else {
 				cout << Date::dayNames[i] << " ";
 				counter = 3; //3 for letters
-				while (counter != longest) {
+				if (counter > longest) {
 					cout << " ";
-					counter++;
+				}
+				else {
+					while (counter != longest) {
+						cout << " ";
+						counter++;
+					}
 				}
 			}
 		}
@@ -460,11 +478,11 @@ void Calendar::showCalendar() {
 
 	cin >> month >> ch >> year;
 	cout << endl;
-	cout << "    " << Date::monthNames[month - 1];
+	cout << "        " << Date::monthNames[month - 1];
 	cout << "    " << year << endl;
 
 	//read the file and insert to map needed data
-	ifstream Read("newText5.txt");
+	ifstream Read("Events.txt");
 	string line;
 
 	while (getline(Read, line)) {
@@ -516,12 +534,20 @@ void Calendar::showCalendar() {
 	}
 	Read.close();
 
+	string start;
+	string dayFromFile;
+	ifstream ReadStartingDay("StartingDate.txt");
+	while (getline(ReadStartingDay, dayFromFile)) {
+		start = dayFromFile;
+	}
+	ReadStartingDay.close();
+
 	//  Tomohiko Sakamoto's Algorithm
 	int day = 1;
 	int startDay = 0;
-	if (startingDay == "Sun")
+	if (start == "Sun")
 		startDay = DayOfMonth(day, month, year);
-	else if (startingDay == "Mon") {
+	else if (start == "Mon") {
 		startDay = DayOfMonth(day, month, year);
 		if (startDay == 0) {
 			startDay += 6;
@@ -530,6 +556,7 @@ void Calendar::showCalendar() {
 			startDay -= 1;
 		}
 	}
+	
 	int dayCount = getNumberOfDays(month, year);
 
 	vector<string> printVector;
@@ -609,7 +636,7 @@ void Calendar::showCalendar() {
 	setFirstDay(month, year, longest);
 	cout << endl;
 
-	//Print and empty space if the day doesn't have a corresponding day 
+	//Print an empty space if the day doesn't have a corresponding day 
 	if (longest != 2) {
 		for (int x = 0; x < startDay; ++x) {
 			std::cout << "      ";
@@ -667,7 +694,7 @@ void Calendar::changeStartingDay() {
 			cout << "You can only choose between Mon and Sun for starting day! Try again. \n";
 		cin >> changeDay;
 		counter++;
-	} while (changeDay != "Mon" || changeDay != "Sun");
+	} while (changeDay != "Mon" && changeDay != "Sun");
 
 	if (currentDay != changeDay) {
 		Temp << changeDay;
@@ -720,7 +747,7 @@ void Calendar::listEvents() {
 	cout << Date::monthNames[IntMonth - 1] << " " << year << "\n";
 	cout << "------------\n"; //if possible make it long as string month + year
 
-	ifstream Read("newText5.txt"); //newText5.txt
+	ifstream Read("Events.txt"); //newText5.txt
 	string line;
 
 	if (events.size() != 0)

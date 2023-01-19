@@ -15,10 +15,11 @@ int main(){
     cal.startMenu();
    
     //cal.deleteEvent();
+  
  
-    //cal.addEvent();
-  // cal.showScedule();
-  // cal.listEvents();
+   // cal.addEvent();
+  //  cal.showScedule();
+  //cal.listEvents();
     //cal.showCalendar();
 
     //cout << cal.getStartingDay();
