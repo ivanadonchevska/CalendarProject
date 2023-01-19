@@ -18,7 +18,6 @@
 #include "Calendar.h"
 #include <algorithm>
 
-
 using namespace std;
 
 

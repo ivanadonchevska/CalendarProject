@@ -24,6 +24,7 @@
     <ProjectGuid>{2b466b55-2fdb-41a4-b5b9-bb500ff92337}</ProjectGuid>
     <RootNamespace>newHopes</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>CalendarProject</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
