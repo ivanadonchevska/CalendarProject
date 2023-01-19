@@ -1,3 +1,17 @@
+/**
+*
+* Solution to course project # 10
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2022/2023
+*
+* @author Ivana Donchevska
+* @idnumber 855364
+* @compiler VC
+*
+* main file 
+*
+*/
 #include <iostream>
 #include "Date.h"
 #include "Event.h"
@@ -11,30 +25,9 @@ using namespace std;
 int main(){
 
     Calendar cal;
-
     cal.startMenu();
    
-    //cal.deleteEvent();
-  
- 
-   // cal.addEvent();
-  //  cal.showScedule();
-  //cal.listEvents();
-    //cal.showCalendar();
-
-    //cout << cal.getStartingDay();
-    //cal.setStartingDay("Mon");
-    //cout << cal.getStartingDay();
-
-    //cal.changeStartingDay();
-    //cal.writeToFileStartingDay();
-
-    //cal.changeStartingDay();
-    //cal.showCalendar();
-
-    //cal.getScheduledEvents();
-
-   
+    return 0;
 }
 
 

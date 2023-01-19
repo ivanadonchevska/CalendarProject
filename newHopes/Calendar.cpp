@@ -1,3 +1,17 @@
+/**
+*
+* Solution to course project # 10
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2022/2023
+*
+* @author Ivana Donchevska
+* @idnumber 855364
+* @compiler VC
+*
+* file in which all the functions from Calendar.h are implemented
+*
+*/
 #include <fstream>
 #include <string>
 #include <algorithm>
