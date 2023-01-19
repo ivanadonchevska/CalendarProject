@@ -3,7 +3,6 @@
 #include <vector>
 #include <sstream>
 #include <map>
-#include <unordered_map>
 #include <set>
 #include "Event.h"
 #include "Date.h"

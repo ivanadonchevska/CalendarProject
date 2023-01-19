@@ -1,7 +1,5 @@
-#include <iostream>
 #include <fstream>
 #include <string>
-#include <iomanip>
 #include <algorithm>
 #include "Calendar.h"
 
@@ -164,7 +162,7 @@ void Calendar::startMenu() {
 
 	switch (choice) {
 	case 1:
-		showCalendar(); //start from Sunday by default
+		showCalendar(); 
 		break;
 	case 2:
 		showScedule(); 
@@ -201,7 +199,6 @@ bool Calendar::doesEventExist(string eventToFind) {
 	Read.close();
 
 	return false;
-	
 }
 
 //function to convert DD/MM/YYYY to YYYY/MM/DD to be easy to compare
@@ -274,7 +271,6 @@ void Calendar::addEvent() {
 	cout << "Event added successfully!";
 }
 
-//make comment if there is no events!!!
 void Calendar::showScedule() {
 	ifstream Read("Events.txt");
 	string line;
@@ -296,17 +292,23 @@ void Calendar::showScedule() {
 	}
 	Read.close();
 
-	sort(events.begin(), events.end(), compare);
+	if (events.size() != 0) {
+		sort(events.begin(), events.end(), compare);
 
-	cout << "You have the following events: \n";
-	for (int i = 0; i < events.size(); i++) {
-		cout << i + 1 << ". " << events[i].eventName << " (" << events[i].startDate;
-		if (events[i].startDate == events[i].endDate) {
-			cout << ")" << "\n";
+
+		cout << "You have the following events: \n";
+		for (int i = 0; i < events.size(); i++) {
+			cout << i + 1 << ". " << events[i].eventName << " (" << events[i].startDate;
+			if (events[i].startDate == events[i].endDate) {
+				cout << ")" << "\n";
+			}
+			else {
+				cout << " - " << events[i].endDate << ") \n";
+			}
 		}
-		else {
-			cout << " - " << events[i].endDate << ") \n";
-		}
+	}
+	else {
+		cout << "Don't have following events yet! \n";
 	}
 };
 
@@ -354,7 +356,7 @@ int Calendar::getNumberOfDays(int month, int year) {
 		else
 			return 28;
 	}
-	//months which has 31 days
+	//months which have 31 days
 	else if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8
 		|| month == 10 || month == 12)
 		return 31;
@@ -542,7 +544,7 @@ void Calendar::showCalendar() {
 	}
 	ReadStartingDay.close();
 
-	//  Tomohiko Sakamoto's Algorithm
+	//  Tomohiko Sakamoto's Algorithm for DayOfMonth
 	int day = 1;
 	int startDay = 0;
 	if (start == "Sun")
@@ -571,7 +573,6 @@ void Calendar::showCalendar() {
 					if (x.first == d + 1) {
 						currentPrint = "[0" + to_string(d + 1) + "](" + to_string(x.second) + ")";
 						printVector.push_back(currentPrint);
-						//cout << " [0" << d + 1 << "](" << x.second << ")";
 					}
 				}
 			}
@@ -581,18 +582,15 @@ void Calendar::showCalendar() {
 					if (x.first == d + 1) {
 						currentPrint = "0" + to_string(d + 1) + "(" + to_string(x.second) + ")";
 						printVector.push_back(currentPrint);
-						//cout << " 0" << d + 1 << "(" << x.second << ") ";
 					}
 				}
 			}
 			//current day but without events
 			else if (storeEvents.find(d + 1) == storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year) {
-				//cout << " [0" << d + 1 << "]  ";
 				currentPrint = "[0" + to_string(d + 1) + "]";
 				printVector.push_back(currentPrint);
 			}
 			else {
-				//cout << " 0" << d + 1 << "   ";
 				currentPrint = "0" + to_string(d + 1);
 				printVector.push_back(currentPrint);
 			}
@@ -601,7 +599,6 @@ void Calendar::showCalendar() {
 			if (storeEvents.find(d + 1) != storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year) {
 				for (auto& x : storeEvents) {
 					if (x.first == d + 1) {
-						//cout << " [" << d + 1 << "](" << x.second << ")";
 						currentPrint = "[" + to_string(d + 1) + "](" + to_string(x.second) + ")";
 						printVector.push_back(currentPrint);
 					}
@@ -610,7 +607,6 @@ void Calendar::showCalendar() {
 			else if (storeEvents.find(d + 1) != storeEvents.end()) {
 				for (auto& x : storeEvents) {
 					if (x.first == d + 1) {
-						//cout << " " << d + 1 << "(" << x.second << ") ";
 						currentPrint = to_string(d + 1) + "(" + to_string(x.second) + ")";
 						printVector.push_back(currentPrint);
 					}
@@ -619,13 +615,11 @@ void Calendar::showCalendar() {
 			else if (storeEvents.find(d + 1) == storeEvents.end() && currentDate.getDay() == d + 1 && currentDate.getMonth() == month && currentDate.getYear() == year) {
 				currentPrint = "[" + to_string(d + 1) + "]";
 				printVector.push_back(currentPrint);
-				//cout <<" [" << d + 1 << "]  ";
 			}
 				
 			else {
 				currentPrint = to_string(d + 1);
 				printVector.push_back(currentPrint);
-				//cout << " " << d + 1 << "   ";
 			}
 	
 		}
@@ -745,9 +739,9 @@ void Calendar::listEvents() {
 
 	cout << "\n";
 	cout << Date::monthNames[IntMonth - 1] << " " << year << "\n";
-	cout << "------------\n"; //if possible make it long as string month + year
+	cout << "------------\n"; 
 
-	ifstream Read("Events.txt"); //newText5.txt
+	ifstream Read("Events.txt"); 
 	string line;
 
 	if (events.size() != 0)

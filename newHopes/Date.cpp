@@ -1,7 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS //to ignore using localtime error
-#include <iostream>
 #include <ctime>
-#include <string>
 #include <sstream>
 #include "date.h"
 
@@ -98,9 +96,7 @@ const int Date::monthDays[12] = {
 
 int Date::countLeapYears(vector<int> date) {
     int years = date[2];
-    // Check if the current year needs to be
-    //  considered for the count of leap years
-    // or not
+    // Check if the current year needs to be considered for the count of leap years or not
     if (date[1] <= 2)
         years--;
     
