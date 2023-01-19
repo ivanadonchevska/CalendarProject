@@ -142,7 +142,7 @@
     <ClCompile Include="Calendar.cpp" />
     <ClCompile Include="Date.cpp" />
     <ClCompile Include="Event.cpp" />
-    <ClCompile Include="newHopes.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Calendar.h" />
