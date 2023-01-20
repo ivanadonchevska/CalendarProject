@@ -12,13 +12,10 @@
 * main file 
 *
 */
-#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include "Date.h"
 #include "Event.h"
 #include "Calendar.h"
-#include <algorithm>
-#include <time.h>
 
 using namespace std;
 
