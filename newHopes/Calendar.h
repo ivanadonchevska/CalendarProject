@@ -54,6 +54,8 @@ public:
 	void showCalendar();
 	int getLongestStringSize(vector<string>);
 
+	bool isValidDate(string);
+	bool isLeap(int);
 	void showScedule(); //list all events in file
 	void listEvents(); //shows events for entered month
 	void deleteEvent(); //delete event from file

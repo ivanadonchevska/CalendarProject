@@ -15,11 +15,14 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <limits>
 #include "Calendar.h"
 
 using namespace std;
 
 const int DAYS_NUMBER = 7;
+const int MAX_VALID_YR = 9999;
+const int MIN_VALID_YR = 1800;
 
 Calendar::Calendar() {}
 
@@ -172,6 +175,12 @@ void Calendar::startMenu() {
 	int choice;
 	cout << "Enter your choice: ";
 	cin >> choice;
+	//to check if choice is integer or not
+	while (!cin.good())
+	{
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	}
 	cout << endl;
 
 	switch (choice) {
@@ -237,6 +246,48 @@ bool compare(Event& lhs, Event& rhs) {
 	return false;
 }
 
+bool Calendar::isLeap(int year) {
+	return (((year % 4 == 0) &&
+		(year % 100 != 0)) ||
+		(year % 400 == 0));
+}
+bool Calendar::isValidDate(string date) {
+	string ch1 = date;
+	string ch2 = date;
+	ch1 = ch1.erase(0, 2);
+	ch1 = ch1.substr(0, 1);
+	ch2 = ch2.erase(0, 5);
+	ch2 = ch2.substr(0, 1);
+
+	if (ch1 != "/" || ch2 != "/")
+		return false;
+	
+	vector<int> vectorStartDate;
+	vectorStartDate = fromStringToVector(date);
+
+	if (vectorStartDate[2] > MAX_VALID_YR ||
+		vectorStartDate[2] < MIN_VALID_YR)
+		return false;
+	if (vectorStartDate[1] < 1 || vectorStartDate[1] > 12)
+		return false;
+	if (vectorStartDate[0] < 1 || vectorStartDate[0] > 31)
+		return false;
+
+	if (vectorStartDate[1] == 2)
+	{
+		if (isLeap(vectorStartDate[2]))
+			return (vectorStartDate[0] <= 29);
+		else
+			return (vectorStartDate[0] <= 28);
+	}
+
+	if (vectorStartDate[1] == 4 || vectorStartDate[1] == 6 ||
+		vectorStartDate[1] == 9 || vectorStartDate[1] == 11)
+		return (vectorStartDate[0] <= 30);
+
+	return true;
+}
+
 void Calendar::addEvent() {
 	ofstream Write;
 	Write.open("Events.txt", ofstream::app);
@@ -266,6 +317,12 @@ void Calendar::addEvent() {
 	
 	cout << "Enter start date (DD/MM/YYYY): ";
 	cin >> event.startDate;
+	
+	while (!isValidDate(event.startDate)){
+		cout << "Entered start date is not valid! Try again. \n";
+		cin >> event.startDate;
+	}
+	
 	while (YYYY_MM_DD(event.startDate) < YYYY_MM_DD(currentDateString)) {
 		cout << "Past events can not be added. Try again! \n";
 		cin >> event.startDate;
@@ -274,6 +331,11 @@ void Calendar::addEvent() {
 
 	cout << "Enter end date (DD/MM/YYYY): ";
 	cin >> event.endDate;
+
+	while (!isValidDate(event.endDate)) {
+		cout << "Entered end date is not valid! Try again. \n";
+		cin >> event.endDate;
+	}
 	
 	while (YYYY_MM_DD(event.endDate) < YYYY_MM_DD(event.startDate)) {
 		cout << "End date can not be before start date. Try again! \n";
@@ -493,6 +555,12 @@ void Calendar::showCalendar() {
 	cout << "Enter month (MM/YYYY): ";
 
 	cin >> month >> ch >> year;
+
+	while (month < 0 || month > 12 || ch != '/' || year < MIN_VALID_YR || year > MAX_VALID_YR) {
+		cout << "Inserted invalid data! Try again.\n";
+		cin >> month >> ch >> year;
+	}
+
 	cout << endl;
 	cout << "        " << Date::monthNames[month - 1];
 	cout << "    " << year << endl;
@@ -741,6 +809,16 @@ void Calendar::listEvents() {
 	cout << "\n";
 	cout << "Enter month (MM/YYYY): ";
 	cin >> monthAndYear;
+
+	string testingDate;
+	testingDate = "01/" + monthAndYear;
+	while (!isValidDate(testingDate)) {
+		cout << "Incorrect input! Try again. \n";
+		cin >> monthAndYear;
+		testingDate = "01/" + monthAndYear;
+
+	}
+
 
 	string month = monthAndYear.substr(0, 2); 
 	int IntMonth = stoi(month); //stoi is used to convert string to integer
