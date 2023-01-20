@@ -816,9 +816,7 @@ void Calendar::listEvents() {
 		cout << "Incorrect input! Try again. \n";
 		cin >> monthAndYear;
 		testingDate = "01/" + monthAndYear;
-
 	}
-
 
 	string month = monthAndYear.substr(0, 2); 
 	int IntMonth = stoi(month); //stoi is used to convert string to integer
@@ -911,3 +909,5 @@ void Calendar::listEvents() {
 	}
 	
 }
+
+//
