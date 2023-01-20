@@ -909,5 +909,3 @@ void Calendar::listEvents() {
 	}
 	
 }
-
-//

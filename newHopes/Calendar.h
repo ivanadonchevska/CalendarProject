@@ -61,5 +61,5 @@ public:
 	void deleteEvent(); //delete event from file
 	void changeStartingDay(); //to change first day when printing calendar
 
-	//
+	
 };
